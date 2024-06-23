@@ -23,7 +23,7 @@ function SectionProcess() {
       <div className="text-center flex mt-10  flex-col gap-5">
         <div className="font-bold text-4xl text-[#00173C]">Our Process</div>
         <div className="text-[#576A8A]">
-          Streamlined Hiring Process for Efficient Talent Acquisition
+          Streamlined Process for Mental Health Improvement
         </div>
       </div>
       {isDesktop ? <DesktopProcess /> : <MobileProcess />}
