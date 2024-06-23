@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -15,6 +15,8 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { loginUser } from "@/api";
+import { useRouter } from "next/navigation";
 const formSchema = z.object({
   email: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -24,6 +26,8 @@ const formSchema = z.object({
   }),
 });
 function LoginForm() {
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,8 +36,23 @@ function LoginForm() {
     },
   });
 
-  const onSubmit = (values: any) => {
-    console.log(values.username);
+  const onSubmit = async (formData: z.infer<typeof formSchema>) => {
+    setButtonDisabled(true);
+    try {
+      const response = await loginUser(formData);
+      const { data } = response;
+      if (response.status === 200) {
+        localStorage.setItem("token", data.message.accessToken);
+        //  showToast("Login Successful", "success");
+        router.push("/");
+      }
+      form.reset();
+      //setApiError(null);
+    } catch (err) {
+      //setApiError("Please verify your credentials");
+      // showToast("Invalid Credentials", "error");
+      setButtonDisabled(false);
+    }
   };
   return (
     <div className="w-1/2 my-auto mx-auto flex flex-col gap-10">
@@ -81,7 +100,9 @@ function LoginForm() {
               </FormItem>
             )}
           />
-          <Button type="submit">Login</Button>
+          <Button type="submit" disabled={buttonDisabled}>
+            Login
+          </Button>
         </form>
       </Form>
     </div>
