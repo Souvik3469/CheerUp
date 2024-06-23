@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -17,12 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import { registerUser } from "../../api";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -38,6 +40,8 @@ const formSchema = z.object({
   }),
 });
 function RegisterForm() {
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,8 +52,21 @@ function RegisterForm() {
     },
   });
 
-  const onSubmit = (values: any) => {
-    console.log(values);
+  // const onSubmit = (values: any) => {
+  //   console.log(values);
+  // };
+  const onSubmit = async (formData: z.infer<typeof formSchema>) => {
+    setButtonDisabled(true);
+    try {
+      const { data } = await registerUser(formData);
+      console.log("register1", data);
+      // showToast("User Registered Successfully", "success");
+      router.push("/login");
+      form.reset();
+    } catch (err) {
+      //showToast("Some Error Occurred during Register", "error");
+      setButtonDisabled(false);
+    }
   };
   return (
     <div className="w-1/2 my-auto mx-auto flex flex-col gap-10">
@@ -133,7 +150,9 @@ function RegisterForm() {
               </FormItem>
             )}
           />
-          <Button type="submit">Register</Button>
+          <Button type="submit" disabled={buttonDisabled}>
+            Register
+          </Button>
         </form>
       </Form>
     </div>
