@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "./Footer";
 import SectionConsult from "./SectionConsult";
 import SectionHero from "./SectionHero";
 import SectionProcess from "./SectionProcess";
@@ -12,6 +13,7 @@ export default function Home() {
       <SectionTrust />
       <SectionProcess />
       <SectionConsult />
+      <Footer />
     </div>
   );
 }

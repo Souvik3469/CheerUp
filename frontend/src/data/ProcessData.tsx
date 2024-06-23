@@ -1,41 +1,48 @@
+// processData.tsx
 import { StaticImageData } from "next/image";
 import m1 from "@/assets/mental1.jpeg";
 import m2 from "@/assets/mental2.jpeg";
+import m3 from "@/assets/mental3.jpeg";
+import m4 from "@/assets/mental4.jpeg";
+import m5 from "@/assets/mental5.jpeg";
+
 interface ProcessData {
   imageUrl: StaticImageData;
   title: string;
   description: string;
 }
+
 const processData: ProcessData[] = [
   {
     imageUrl: m1,
-    title: "Disovery Session",
+    title: "Initial Assessment",
     description:
-      "We begin with an in-depth consultation to understand your business objectives, company culture, and specific staffing requirements.",
+      "Begin with a well-crafted mental health assessment to understand your current state and determine the level of support required.",
   },
   {
     imageUrl: m2,
-    title: "Targeted Outreach",
+    title: "Personalized Plan",
     description:
-      "Leveraging our extensive network and industry insights, we identify potential candidates who align with your criteria through targeted outreach.",
+      "Receive a customized 30-day mental exercise plan tailored to your specific needs and goals, created by our expert team.",
   },
   {
     imageUrl: m1,
-    title: "Comprehensive Screening",
+    title: "Expert Consultation",
     description:
-      "Our experienced recruiters conduct thorough screenings, assessing candidates for skills, experience, cultural fit, and alignment with your values.",
+      "Book one-on-one sessions with top mental health professionals to receive personalized guidance and support.",
   },
   {
     imageUrl: m1,
-    title: "Client Collaboration",
+    title: "Community Support",
     description:
-      "We value your input and collaborate with you throughout the process. Shortlisted candidates undergo personalized assessments tailored to your industry and job requirements, ensuring they possess the competencies needed to excel.",
+      "Join our discussion forums to connect with a supportive community, share experiences, and find peer support.",
   },
   {
     imageUrl: m1,
-    title: "Transparent Communication",
+    title: "Ongoing Monitoring",
     description:
-      "We maintain open communication, providing regular updates and insights. Rigorous quality checks are conducted before presenting candidates to ensure they meet our high standards of excellence.",
+      "Regularly track your progress and adjust your plan as needed with continuous support from our experts.",
   },
 ];
+
 export default processData;
