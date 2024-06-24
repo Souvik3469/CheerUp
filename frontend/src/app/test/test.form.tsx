@@ -10,13 +10,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { fetchMyTests } from "@/api/test";
 
 function TestForm() {
+  const question = fetchMyTests();
+
   const [currentInd, setCurrentInd] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleOptionChange = (questionIndex, optionIndex, points) => {
+  const handleOptionChange = (
+    questionIndex: any,
+    optionIndex: any,
+    points: any
+  ) => {
     setSelectedOptions({
       ...selectedOptions,
       [questionIndex]: { optionIndex, points },
@@ -25,7 +32,7 @@ function TestForm() {
 
   const calculateTotalPoints = () => {
     return Object.values(selectedOptions).reduce(
-      (total, option) => total + (option.points || 0),
+      (total, option: any) => total + (option.points || 0),
       0
     );
   };
@@ -39,36 +46,37 @@ function TestForm() {
 
   return (
     <div className="p-10">
-      {QuestionsData?.map((data, ind) =>
-        ind === currentInd ? (
-          <div key={ind}>
-            <p className="text-2xl">
-              {"Q"}
-              {ind + 1 + "."}
-              {data.question}
-            </p>
-            <div className="flex flex-col gap-5 mt-5">
-              {data.options.map((op, optionInd) => (
-                <div
-                  key={optionInd}
-                  className="flex border border-gray-200 w-[30%] p-4"
-                >
-                  <input
-                    type="radio"
-                    name={`question-${ind}`}
-                    checked={selectedOptions[ind]?.optionIndex === optionInd}
-                    onChange={() =>
-                      handleOptionChange(ind, optionInd, op.points)
-                    }
-                    className="mr-2"
-                  />
-                  {op.text}
-                </div>
-              ))}
+      {question.data &&
+        question.data[1]?.questions.map((data: any, ind: any) =>
+          ind === currentInd ? (
+            <div key={ind}>
+              <p className="text-2xl">
+                {"Q"}
+                {ind + 1 + "."}
+                {data.text}
+              </p>
+              <div className="flex flex-col gap-5 mt-5">
+                {data.options.map((op: any, optionInd: any) => (
+                  <div
+                    key={optionInd}
+                    className="flex border border-gray-200 w-[30%] p-4"
+                  >
+                    <input
+                      type="radio"
+                      name={`question-${ind}`}
+                      checked={selectedOptions[ind]?.optionIndex === optionInd}
+                      onChange={() =>
+                        handleOptionChange(ind, optionInd, op.score)
+                      }
+                      className="mr-2"
+                    />
+                    {op.text}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ) : null
-      )}
+          ) : null
+        )}
       <div className="flex justify-between gap-5 mt-10">
         <div className="flex gap-5">
           <Button
@@ -78,7 +86,7 @@ function TestForm() {
           </Button>
           <Button
             onClick={() =>
-              currentInd < QuestionsData.length - 1 &&
+              currentInd < question.data[1]?.questions.length - 1 &&
               setCurrentInd(currentInd + 1)
             }
           >
@@ -96,7 +104,8 @@ function TestForm() {
                 setOpenDialog(true);
               }}
               disabled={
-                Object.keys(selectedOptions).length !== QuestionsData.length
+                Object.keys(selectedOptions).length !==
+                question.data[1]?.questions.length
               }
             >
               Submit
