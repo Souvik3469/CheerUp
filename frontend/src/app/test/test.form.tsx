@@ -1,25 +1,29 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { QuestionsData } from "@/data/QuestionsData";
 import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { fetchMyTests } from "@/api/test";
 
 function TestForm() {
-  const {
-    data: myTests,
-    isLoading: myTestsLoading,
-    isError: myTestsError,
-  } = fetchMyTests();
-  const [currentTestIndex, setCurrentTestIndex] = useState(0);
+  const question = fetchMyTests();
+
+  const [currentInd, setCurrentInd] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleOptionChange = (questionIndex, optionIndex, points) => {
+  const handleOptionChange = (
+    questionIndex: any,
+    optionIndex: any,
+    points: any
+  ) => {
     setSelectedOptions({
       ...selectedOptions,
       [questionIndex]: { optionIndex, points },
@@ -28,89 +32,62 @@ function TestForm() {
 
   const calculateTotalPoints = () => {
     return Object.values(selectedOptions).reduce(
-      (total, option) => total + (option.points || 0),
+      (total, option: any) => total + (option.points || 0),
       0
     );
   };
 
   const resetForm = () => {
-    setCurrentTestIndex(0);
+    setCurrentInd(0);
     setSelectedOptions({});
   };
 
-  const handleSubmit = () => {
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  if (myTestsLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (myTestsError) {
-    console.log("Error fetching tests:", myTestsError);
-    return <div>Error fetching tests. Please try again later.</div>;
-  }
-
-  if (!myTests || myTests.length === 0) {
-    return <div>No test data found.</div>;
-  }
-  const questionSet = myTests[1].questions;
-  console.log("====================================");
-  console.log("QQQQ", questionSet);
-  console.log("====================================");
-
-  const currentTest = questionSet[currentTestIndex];
+  console.log(calculateTotalPoints(), "selected");
 
   return (
     <div className="p-10">
-      <p className="text-2xl">
-        {"Q"}
-        {currentTestIndex + 1 + "."}
-        {currentTest.text}
-      </p>
-      <div className="flex flex-col gap-5 mt-5">
-        {currentTest.map((question, questionIndex) => (
-          <div
-            key={question.id}
-            className="flex border border-gray-200 w-[30%] p-4"
-          >
-            <input
-              type="radio"
-              name={`question-${currentTestIndex}`}
-              checked={
-                selectedOptions[currentTestIndex]?.optionIndex === questionIndex
-              }
-              onChange={() =>
-                handleOptionChange(
-                  currentTestIndex,
-                  questionIndex,
-                  question.options[questionIndex].score
-                )
-              }
-              className="mr-2"
-            />
-            {question.text}
-          </div>
-        ))}
-      </div>
-
+      {question.data &&
+        question.data[1]?.questions.map((data: any, ind: any) =>
+          ind === currentInd ? (
+            <div key={ind}>
+              <p className="text-2xl">
+                {"Q"}
+                {ind + 1 + "."}
+                {data.text}
+              </p>
+              <div className="flex flex-col gap-5 mt-5">
+                {data.options.map((op: any, optionInd: any) => (
+                  <div
+                    key={optionInd}
+                    className="flex border border-gray-200 w-[30%] p-4"
+                  >
+                    <input
+                      type="radio"
+                      name={`question-${ind}`}
+                      checked={selectedOptions[ind]?.optionIndex === optionInd}
+                      onChange={() =>
+                        handleOptionChange(ind, optionInd, op.score)
+                      }
+                      className="mr-2"
+                    />
+                    {op.text}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null
+        )}
       <div className="flex justify-between gap-5 mt-10">
         <div className="flex gap-5">
           <Button
-            onClick={() =>
-              currentTestIndex > 0 && setCurrentTestIndex(currentTestIndex - 1)
-            }
+            onClick={() => currentInd > 0 && setCurrentInd(currentInd - 1)}
           >
             Back
           </Button>
           <Button
             onClick={() =>
-              currentTestIndex < myTests.length - 1 &&
-              setCurrentTestIndex(currentTestIndex + 1)
+              currentInd < question.data[1]?.questions.length - 1 &&
+              setCurrentInd(currentInd + 1)
             }
           >
             Next
@@ -120,23 +97,28 @@ function TestForm() {
           <Button className="bg-red-500 hover:bg-red-600" onClick={resetForm}>
             Reset
           </Button>
-          <Button
-            className="bg-blue-700 hover:bg-blue-900"
-            onClick={handleSubmit}
-            disabled={
-              Object.keys(selectedOptions).length !==
-              currentTest.questions.length
-            }
-          >
-            Submit
-          </Button>
+          <>
+            <Button
+              className="bg-blue-700 hover:bg-blue-900"
+              onClick={() => {
+                setOpenDialog(true);
+              }}
+              disabled={
+                Object.keys(selectedOptions).length !==
+                question.data[1]?.questions.length
+              }
+            >
+              Submit
+            </Button>
+          </>
         </div>
       </div>
 
-      <Dialog open={openDialog} onOpenChange={handleCloseDialog}>
+      <Dialog open={openDialog} onOpenChange={() => setOpenDialog(false)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Total Points</DialogTitle>
+            <DialogDescription>This action cannot be undone.</DialogDescription>
             You got {calculateTotalPoints()}
           </DialogHeader>
         </DialogContent>
