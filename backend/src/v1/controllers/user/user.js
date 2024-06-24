@@ -223,6 +223,148 @@ const userController = {
       res.status(500).json({ error: err });
     }
   },
+async  createTest(req, res,next) {
+  try {
+    const userId = req.user.id;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (user.role !== 'Mentor') {
+      return res.status(403).json({ error: "Only mentors can create tests" });
+    }
+
+    const { title, questions } = req.body;
+
+  
+    const test = await prisma.test.create({
+      data: {
+        title,
+        userId,
+        questions: {
+          create: questions.map(question => ({
+            text: question.text,
+            options: {
+              create: question.options.map(option => ({
+                text: option.text,
+                score: option.score
+              }))
+            }
+          }))
+        }
+      }
+    });
+
+    res.status(201).json(test);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+},
+async getAllTests(req, res, next) {
+    try {
+      const tests = await prisma.test.findMany({
+        include: {
+          questions: {
+            include: {
+              options: true
+            }
+          },
+          mentor: true  
+        }
+      });
+
+      res.status(200).json(tests);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: err.message });
+    }
+  },
+
+  async getMyTests(req, res, next) {
+    try {
+      const userId = req.user.id;
+
+      const tests = await prisma.test.findMany({
+        where: { userId },
+        include: {
+          questions: {
+            include: {
+              options: true
+            }
+          }
+        }
+      });
+
+      res.status(200).json(tests);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: err.message });
+    }
+  },
+
+ async deleteTest(req, res, next) {
+  try {
+    const userId = req.user.id;
+
+    if (!userId) {
+      res.json({
+        message: "User ID is missing or undefined in req.user",
+      });
+      return;
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+
+
+    if (!user) {
+      res.json({
+        message: "User does not exist",
+      });
+      return;
+    }
+
+    const test = await prisma.test.findFirst({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!test) {
+      res.json({
+        message: "Test does not exist",
+      });
+      return;
+    }
+
+
+    if (test.userId !== userId) {
+      res.json({
+        message: "Not the owner of this test",
+      });
+      return;
+    }
+
+    await prisma.test.delete({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    res.json({
+      success: true,
+      message: "Test deleted successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+}
+
 
 };
 export default userController;
