@@ -6,11 +6,9 @@ import createError from "http-errors";
 import morgan from "morgan";
 import path from "path";
 
-
 import "./v1/config/env.config";
 
 import { authRoutes, userRoute } from "./v1/routes";
-
 
 // const openai = new OpenAI({
 //   apiKey: process.env.OPENAI_API_KEY, // This is also the default, can be omitted
@@ -27,7 +25,11 @@ const limiter = rateLimit({
 });
 
 const corsOptions = {
-  origin: ["http://localhost:5173","http://localhost:3000"],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://localhost:3001",
+  ],
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
@@ -56,7 +58,6 @@ const apiVersion = "v1";
 // Routes
 app.use(`/${apiVersion}/auth`, authRoutes);
 app.use(`/${apiVersion}/user`, userRoute);
-
 
 // // 404 Handler
 app.use((req, res, next) => {
