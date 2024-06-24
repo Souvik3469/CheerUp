@@ -18,5 +18,12 @@ router.delete(
   authMiddleware,
   userController.deleteQuestion
 );
-
+router.post("/create-test", authMiddleware, userController.createTest);
+router.get("/get-mytest", authMiddleware, userController.getMyTests);
+router.get("/get-alltest", userController.getAllTests);
+router.delete(
+  "/delete-test/:id",
+  authMiddleware,
+  userController.deleteTest
+);
 export default router;
