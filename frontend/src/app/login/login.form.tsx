@@ -60,7 +60,7 @@ function LoginForm() {
       <div className="flex flex-col font-semibold">
         <div className="text-blue-600 text-2xl font-bold">Sign In</div>
         <div>
-          Don't have an account ? <Link href="/login">Register</Link>
+          Don't have an account ? <Link href="/register">Register</Link>
         </div>
       </div>
       <Form {...form}>

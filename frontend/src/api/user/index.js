@@ -1,7 +1,5 @@
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-
-
+import axios from "axios";
 
 const AuthAPI = () => {
   if (typeof window !== "undefined") {
@@ -33,10 +31,7 @@ const GetUserQuery = () =>
     select: (data) => {
       const res = data.message;
       return res;
-
     },
   });
-
-
 
 export { GetUserQuery };
