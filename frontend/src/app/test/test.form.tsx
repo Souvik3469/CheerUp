@@ -1,18 +1,21 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { QuestionsData } from "@/data/QuestionsData";
 import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
+import { fetchMyTests } from "@/api/test";
 
 function TestForm() {
-  const [currentInd, setCurrentInd] = useState(0);
+  const {
+    data: myTests,
+    isLoading: myTestsLoading,
+    isError: myTestsError,
+  } = fetchMyTests();
+  const [currentTestIndex, setCurrentTestIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -31,55 +34,83 @@ function TestForm() {
   };
 
   const resetForm = () => {
-    setCurrentInd(0);
+    setCurrentTestIndex(0);
     setSelectedOptions({});
   };
 
-  console.log(calculateTotalPoints(), "selected");
+  const handleSubmit = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  if (myTestsLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (myTestsError) {
+    console.log("Error fetching tests:", myTestsError);
+    return <div>Error fetching tests. Please try again later.</div>;
+  }
+
+  if (!myTests || myTests.length === 0) {
+    return <div>No test data found.</div>;
+  }
+  const questionSet = myTests[1].questions;
+  console.log("====================================");
+  console.log("QQQQ", questionSet);
+  console.log("====================================");
+
+  const currentTest = questionSet[currentTestIndex];
 
   return (
     <div className="p-10">
-      {QuestionsData?.map((data, ind) =>
-        ind === currentInd ? (
-          <div key={ind}>
-            <p className="text-2xl">
-              {"Q"}
-              {ind + 1 + "."}
-              {data.question}
-            </p>
-            <div className="flex flex-col gap-5 mt-5">
-              {data.options.map((op, optionInd) => (
-                <div
-                  key={optionInd}
-                  className="flex border border-gray-200 w-[30%] p-4"
-                >
-                  <input
-                    type="radio"
-                    name={`question-${ind}`}
-                    checked={selectedOptions[ind]?.optionIndex === optionInd}
-                    onChange={() =>
-                      handleOptionChange(ind, optionInd, op.points)
-                    }
-                    className="mr-2"
-                  />
-                  {op.text}
-                </div>
-              ))}
-            </div>
+      <p className="text-2xl">
+        {"Q"}
+        {currentTestIndex + 1 + "."}
+        {currentTest.text}
+      </p>
+      <div className="flex flex-col gap-5 mt-5">
+        {currentTest.map((question, questionIndex) => (
+          <div
+            key={question.id}
+            className="flex border border-gray-200 w-[30%] p-4"
+          >
+            <input
+              type="radio"
+              name={`question-${currentTestIndex}`}
+              checked={
+                selectedOptions[currentTestIndex]?.optionIndex === questionIndex
+              }
+              onChange={() =>
+                handleOptionChange(
+                  currentTestIndex,
+                  questionIndex,
+                  question.options[questionIndex].score
+                )
+              }
+              className="mr-2"
+            />
+            {question.text}
           </div>
-        ) : null
-      )}
+        ))}
+      </div>
+
       <div className="flex justify-between gap-5 mt-10">
         <div className="flex gap-5">
           <Button
-            onClick={() => currentInd > 0 && setCurrentInd(currentInd - 1)}
+            onClick={() =>
+              currentTestIndex > 0 && setCurrentTestIndex(currentTestIndex - 1)
+            }
           >
             Back
           </Button>
           <Button
             onClick={() =>
-              currentInd < QuestionsData.length - 1 &&
-              setCurrentInd(currentInd + 1)
+              currentTestIndex < myTests.length - 1 &&
+              setCurrentTestIndex(currentTestIndex + 1)
             }
           >
             Next
@@ -89,27 +120,23 @@ function TestForm() {
           <Button className="bg-red-500 hover:bg-red-600" onClick={resetForm}>
             Reset
           </Button>
-          <>
-            <Button
-              className="bg-blue-700 hover:bg-blue-900"
-              onClick={() => {
-                setOpenDialog(true);
-              }}
-              disabled={
-                Object.keys(selectedOptions).length !== QuestionsData.length
-              }
-            >
-              Submit
-            </Button>
-          </>
+          <Button
+            className="bg-blue-700 hover:bg-blue-900"
+            onClick={handleSubmit}
+            disabled={
+              Object.keys(selectedOptions).length !==
+              currentTest.questions.length
+            }
+          >
+            Submit
+          </Button>
         </div>
       </div>
 
-      <Dialog open={openDialog} onOpenChange={() => setOpenDialog(false)}>
+      <Dialog open={openDialog} onOpenChange={handleCloseDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Total Points</DialogTitle>
-            <DialogDescription>This action cannot be undone.</DialogDescription>
             You got {calculateTotalPoints()}
           </DialogHeader>
         </DialogContent>
