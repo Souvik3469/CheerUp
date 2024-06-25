@@ -26,4 +26,8 @@ router.delete(
   authMiddleware,
   userController.deleteTest
 );
+router.post("/create-taskset", authMiddleware, userController.createTaskSet);
+router.post("/start-taskset/:taskSetId", authMiddleware, userController.startTaskSet);
+router.post("/complete-task/:taskId", authMiddleware, userController.completeTask);
+router.post("/track-taskset-progress/:taskSetId", authMiddleware, userController.getUserTaskSetProgress);
 export default router;
