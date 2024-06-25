@@ -61,7 +61,7 @@ export const fetchMyTests = () =>
     queryKey: ["get-all-tests"],
     queryFn: () => getAllTests(),
     select: (data) => {
-      const res = data.message;
+      const res = data;
       return res;
     },
   });

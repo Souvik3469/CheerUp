@@ -10,10 +10,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { fetchMyTests } from "@/api/test";
+import { fetchAllTests } from "@/api/test";
 
 function TestForm() {
-  const question = fetchMyTests();
+  const question = fetchAllTests();
 
   const [currentInd, setCurrentInd] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState({});

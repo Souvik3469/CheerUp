@@ -8,10 +8,10 @@ datasource db {
 }
 
 model User {
-    id              String     @id @default(auto()) @map("_id") @db.ObjectId
+    id              String        @id @default(auto()) @map("_id") @db.ObjectId
     name            String?
-    email           String?    @unique
-    role            String?    @default("User") // User,Mentor,NGO
+    email           String?       @unique
+    role            String?       @default("User") // User,Mentor,NGO
     bio             String?
     image           String?
     coverImage      String?
@@ -19,10 +19,13 @@ model User {
     password        String?
     document        String?
     questions       Question[]
-    Answer          Answer[]
+    answers         Answer[]
     tests           Test[]
-    createdAt       DateTime   @default(now())
-    updatedAt       DateTime   @updatedAt
+    taskSets        UserTaskSet[]
+    meetingsAsHost  Meeting[]     @relation("host")
+    meetingsAsGuest Meeting[]     @relation("guest")
+    createdAt       DateTime      @default(now())
+    updatedAt       DateTime      @updatedAt
     hasNotification Boolean?
 }
 
@@ -32,7 +35,7 @@ model Question {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     answers   Answer[]
-    User      User?    @relation(fields: [userId], references: [id])
+    user      User?    @relation(fields: [userId], references: [id])
     userId    String?
 }
 
@@ -78,4 +81,68 @@ model TestOption {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+model Meeting {
+    id       String  @id @default(auto()) @map("_id") @db.ObjectId
+    host     User    @relation("host", fields: [hostId], references: [id], onDelete: Cascade)
+    guest    User    @relation("guest", fields: [guestId], references: [id], onDelete: Cascade)
+    hostId   String
+    guestId  String
+    status   String
+    notes    String?
+    duration Int?
+    type     String?
+    location String?
+    dates    Date[]
+}
+
+model Date {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    date      DateTime
+    meeting   Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+    meetingId String
+}
+
+model TaskSet {
+    id          String        @id @default(auto()) @map("_id") @db.ObjectId
+    name        String
+    tasks       Task[]
+    userTaskSet UserTaskSet[]
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+}
+
+model Task {
+    id            String           @id @default(auto()) @map("_id") @db.ObjectId
+    title         String
+    description   String
+    taskSet       TaskSet          @relation(fields: [taskSetId], references: [id], onDelete: Cascade)
+    taskSetId     String
+    taskCompleted TaskCompletion[]
+    day           Int
+    createdAt     DateTime         @default(now())
+    updatedAt     DateTime         @updatedAt
+}
+
+model UserTaskSet {
+    id             String           @id @default(auto()) @map("_id") @db.ObjectId
+    user           User             @relation(fields: [userId], references: [id])
+    userId         String
+    taskSet        TaskSet          @relation(fields: [taskSetId], references: [id])
+    taskSetId      String
+    startDate      DateTime
+    completedTasks TaskCompletion[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model TaskCompletion {
+    id            String      @id @default(auto()) @map("_id") @db.ObjectId
+    userTaskSet   UserTaskSet @relation(fields: [userTaskSetId], references: [id], onDelete: Cascade)
+    userTaskSetId String
+    task          Task        @relation(fields: [taskId], references: [id])
+    taskId        String
+    completedAt   DateTime    @default(now())
 }
