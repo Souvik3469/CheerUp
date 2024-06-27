@@ -18,15 +18,12 @@ const queryClient = new QueryClient({
 export default function Home() {
   return (
     <div>
-      <QueryClientProvider client={queryClient}>
-        <SectionHero />
-        <SectionTrust />
-        <SectionProcess />
-        <SectionConsult />
+      <SectionHero />
+      <SectionTrust />
+      <SectionProcess />
+      <SectionConsult />
 
-        <Footer />
-        <ReactQueryDevtools initialIsOpen={false} position="bottom" />
-      </QueryClientProvider>
+      <Footer />
     </div>
   );
 }

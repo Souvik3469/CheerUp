@@ -27,8 +27,6 @@ const loginController = {
         return next(createError.Unauthorized("Verify your Credentials1"));
       }
 
-    
-
       const accessToken = jwt.sign(user.id, process.env.USER_ACCESS_SECRET);
 
       res.cookie("accessToken", accessToken, {
@@ -55,11 +53,8 @@ const loginController = {
     }
   },
 
-
   async register(req, res, next) {
     try {
-    
-
       const resp = await req.body;
       delete resp.confirmPassword;
       const user = await prisma.user.findUnique({
@@ -72,8 +67,8 @@ const loginController = {
           message: "User already exists",
         });
       }
-     
 
+      console.log(resp, "user");
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(resp.password, salt);
       const data = {

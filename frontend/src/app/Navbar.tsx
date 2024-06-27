@@ -15,7 +15,7 @@ function Navbar() {
         <div className="text-xl font-medium">
           <div className="flex gap-5">
             <div>Home</div>
-            <div>Services</div>
+            <Link href="/dashboard">Dashboard</Link>
             <div>Discussion Forum</div>
             <div>Consultation</div>
             <Link href="/test">Test</Link>
