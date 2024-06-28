@@ -49,6 +49,6 @@ router.post(
 router.post("/create-event", authMiddleware, eventController.createEvent);
 router.get("/get-allevents", authMiddleware, eventController.getAllEvents);
 router.get("/get-myevents", authMiddleware, eventController.getMyEvents);
-router.delete("/delete-event/:eventId", authMiddleware, eventController.deleteEvent);
-router.patch("/delete-event/:eventId", authMiddleware, eventController.updateEvent);
+router.delete("/delete-event/:id", authMiddleware, eventController.deleteEvent);
+router.patch("/update-event/:id", authMiddleware, eventController.updateEvent);
 export default router;

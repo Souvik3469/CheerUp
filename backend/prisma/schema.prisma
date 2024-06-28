@@ -161,8 +161,8 @@ model Event {
     funding     Int?
 
     ngo    User        @relation("ngo", fields: [ngoId], references: [id], onDelete: Cascade)
-    user   User        @relation("user", fields: [userId], references: [id], onDelete: Cascade)
-    userId String
+    user   User?       @relation("user", fields: [userId], references: [id], onDelete: Cascade)
+    userId String?
     ngoId  String
     date   EventDate[]
 }

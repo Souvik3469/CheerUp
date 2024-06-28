@@ -13,12 +13,12 @@ const eventController = {
   async createEvent(req, res, next) {
     try {
       const { name, description, location, funding, dates } = req.body;
-      const userId = req.user.id;
+      const ngoid = req.user.id;
 
       // Check if the user is an NGO
       const user = await prisma.user.findFirst({
         where: {
-          id: userId,
+          id: ngoid,
           role: "NGO",
         },
       });
@@ -33,8 +33,8 @@ const eventController = {
           description,
           location,
           funding,
-          userId,
-          ngoId: userId,
+        
+          ngoId: ngoid,
           date: {
             create: dates.map((date) => ({
               date,
@@ -94,6 +94,9 @@ const eventController = {
     try {
       const eventId = req.params.id;
       const userId = req.user.id;
+
+      console.log("eventId",eventId);
+      console.log("userId",userId);
 
       const event = await prisma.event.findFirst({
         where: {
