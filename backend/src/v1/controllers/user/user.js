@@ -427,6 +427,41 @@ const userController = {
             res.status(500).json({ error: error.message });
         }
     },
+    async getTaskSet(req, res, next) {
+        const { taskSetId } = req.params;
+        const userId = req.user.id;
+
+        try {
+            const taskSet = await prisma.taskSet.findUnique({
+                where: { id: taskSetId },
+                include:{
+                tasks:true
+                }
+            });
+
+            if (!taskSet) {
+                return res.status(404).json({ error: 'TaskSet not found' });
+            }
+            
+            const UserTaskSet = await prisma.userTaskSet.findFirst({
+                where: { userId, taskSetId },
+                 include: {
+                    taskSet: {
+                        include: {
+                            tasks: true,
+                        },
+                    },
+                 
+                },
+            });
+
+            
+
+            res.json(UserTaskSet);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    },
     async completeTask(req, res, next) {
     const { taskId } = req.params;
     const userId = req.user.id;

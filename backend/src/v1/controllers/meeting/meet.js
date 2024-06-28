@@ -16,7 +16,7 @@ const meetController = {
       const { guestId, notes } = req.body;
       const hostId = req.user.id;
       const dates = req.body.dates;
-      console.log(guestId, "d");
+    //  console.log(guestId, "d");
       const host = await prisma.user.findFirst({
         where: {
           id: hostId,
@@ -64,7 +64,7 @@ const meetController = {
           guestId: mentorId,
         },
       });
-      console.log(meetingId, "");
+     // console.log(meetingId, "");
       if (!meeting) {
         return res
           .status(404)
@@ -97,8 +97,12 @@ const meetController = {
           id: userId,
         },
       });
-      if (mentor.role == "mentor") {
+      // console.log('====================================');
+      // console.log("Mentor",userId);
+      // console.log('====================================');
+      if (mentor.role == "Mentor") {
         const meetings = await prisma.meeting.findMany({
+        
           where: {
             guestId: userId,
           },
@@ -166,7 +170,7 @@ const meetController = {
           role: "Mentor",
         },
       });
-      console.log(mentors);
+    //  console.log(mentors);
       res.json({ message: mentors });
     } catch (err) {
       res.status(500).json({ error: err });
