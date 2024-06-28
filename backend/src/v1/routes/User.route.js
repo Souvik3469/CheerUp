@@ -4,6 +4,8 @@ import authMiddleware from "../middlewares/Auth.middleware";
 
 const router = express.Router();
 router.post("/book-meeting", authMiddleware, meetController.bookMeeting);
+router.post("/confirm-meeting", authMiddleware, meetController.confirmMeeting);
+router.post("/reject-meeting", authMiddleware, meetController.rejectMeeting);
 router.get("/get-meetings", authMiddleware, meetController.getMeetings);
 router.get("/get-mentors", authMiddleware, meetController.getmentorsinfo);
 router.get("/my-meetings", authMiddleware, meetController.showbookedMeetings);

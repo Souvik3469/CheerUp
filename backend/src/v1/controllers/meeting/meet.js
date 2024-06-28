@@ -68,9 +68,13 @@ const meetController = {
       if (!meeting) {
         return res
           .status(404)
-          .json({ error: "Meeting not found or not pending." });
+          .json({ error: "Meeting not found " });
       }
-
+   if (meeting.status!=="requested") {
+      return res
+        .status(404)
+        .json({ error: "Meeting is not pending " });
+    } 
       // Update the meeting status to "confirmed"
       console.log(meetingId);
       const updatedMeeting = await prisma.meeting.update({
@@ -88,6 +92,45 @@ const meetController = {
       res.status(500).json({ error: "Internal server error" });
     }
   },
+  async rejectMeeting(req, res, next) {
+  try {
+    const meetingId = req.body.meetingId;
+    const mentorId = req.user.id;
+    const meeting = await prisma.meeting.findFirst({
+      where: {
+        id: meetingId,
+        guestId: mentorId,
+      },
+    });
+
+    if (!meeting) {
+      return res
+        .status(404)
+        .json({ error: "Meeting not found " });
+    }
+    if (meeting.status!=="requested") {
+      return res
+        .status(404)
+        .json({ error: "Meeting is not pending " });
+    }
+
+    
+    const updatedMeeting = await prisma.meeting.update({
+      where: {
+        id: meetingId,
+      },
+      data: {
+        status: "rejected",
+      },
+    });
+
+    res.json(updatedMeeting);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+},
+
   // for mentor to see the meetings he need to attend
   async getMeetings(req, res, next) {
     try {
@@ -123,7 +166,7 @@ const meetController = {
       res.status(500).json({ error: err });
     }
   },
-  // for the student to see the booked meeting only one at a time with only a single mentor
+  // for the user to see the booked meeting only one at a time with only a single mentor
 
   async showbookedMeetings(req, res, next) {
     try {
