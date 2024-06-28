@@ -6,6 +6,7 @@ import Image from "next/image";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { Mymeetings } from "@/api/meeting";
+import { startMyTask } from "@/api/tasks";
 function DashboardPanel() {
   const { isLoading, data: userData } = GetUserQuery();
 
@@ -17,6 +18,10 @@ function DashboardPanel() {
     );
   }
   const percentage = 66;
+  const startTracking = async () => {
+    const { data } = await startMyTask();
+    console.log(data, "data from startmeeting");
+  };
   return (
     <div className="m-5">
       <div className="text-3xl font-semibold mb-4">Hi, {userData?.name}.</div>
@@ -100,6 +105,14 @@ function DashboardPanel() {
           <h1 className="text-start mb-3">Your Daily Routine</h1>
           <div className="border border-gray-300 rounded-xl">
             <WeekPicker />
+          </div>
+          <div
+            onClick={() => {
+              startTracking();
+            }}
+            className="bg-blue-600 flex cursor-pointer  rounded-3xl mt-5 text-white p-2"
+          >
+            Start Your Progress Tracking
           </div>
         </div>
       </div>
