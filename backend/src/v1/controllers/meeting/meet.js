@@ -16,7 +16,7 @@ const meetController = {
       const { guestId, notes } = req.body;
       const hostId = req.user.id;
       const dates = req.body.dates;
-    //  console.log(guestId, "d");
+      //  console.log(guestId, "d");
       const host = await prisma.user.findFirst({
         where: {
           id: hostId,
@@ -64,17 +64,13 @@ const meetController = {
           guestId: mentorId,
         },
       });
-     // console.log(meetingId, "");
+      // console.log(meetingId, "");
       if (!meeting) {
-        return res
-          .status(404)
-          .json({ error: "Meeting not found " });
+        return res.status(404).json({ error: "Meeting not found " });
       }
-   if (meeting.status!=="requested") {
-      return res
-        .status(404)
-        .json({ error: "Meeting is not pending " });
-    } 
+      if (meeting.status !== "requested") {
+        return res.status(404).json({ error: "Meeting is not pending " });
+      }
       // Update the meeting status to "confirmed"
       console.log(meetingId);
       const updatedMeeting = await prisma.meeting.update({
@@ -93,43 +89,38 @@ const meetController = {
     }
   },
   async rejectMeeting(req, res, next) {
-  try {
-    const meetingId = req.body.meetingId;
-    const mentorId = req.user.id;
-    const meeting = await prisma.meeting.findFirst({
-      where: {
-        id: meetingId,
-        guestId: mentorId,
-      },
-    });
+    try {
+      const meetingId = req.body.meetingId;
+      const mentorId = req.user.id;
+      const meeting = await prisma.meeting.findFirst({
+        where: {
+          id: meetingId,
+          guestId: mentorId,
+        },
+      });
 
-    if (!meeting) {
-      return res
-        .status(404)
-        .json({ error: "Meeting not found " });
+      if (!meeting) {
+        return res.status(404).json({ error: "Meeting not found " });
+      }
+      if (meeting.status !== "requested") {
+        return res.status(404).json({ error: "Meeting is not pending " });
+      }
+
+      const updatedMeeting = await prisma.meeting.update({
+        where: {
+          id: meetingId,
+        },
+        data: {
+          status: "rejected",
+        },
+      });
+
+      res.json(updatedMeeting);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Internal server error" });
     }
-    if (meeting.status!=="requested") {
-      return res
-        .status(404)
-        .json({ error: "Meeting is not pending " });
-    }
-
-    
-    const updatedMeeting = await prisma.meeting.update({
-      where: {
-        id: meetingId,
-      },
-      data: {
-        status: "rejected",
-      },
-    });
-
-    res.json(updatedMeeting);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-},
+  },
 
   // for mentor to see the meetings he need to attend
   async getMeetings(req, res, next) {
@@ -145,7 +136,6 @@ const meetController = {
       // console.log('====================================');
       if (mentor.role == "Mentor") {
         const meetings = await prisma.meeting.findMany({
-        
           where: {
             guestId: userId,
           },
@@ -213,7 +203,7 @@ const meetController = {
           role: "Mentor",
         },
       });
-    //  console.log(mentors);
+      //  console.log(mentors);
       res.json({ message: mentors });
     } catch (err) {
       res.status(500).json({ error: err });

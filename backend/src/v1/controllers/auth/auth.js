@@ -63,13 +63,12 @@ const loginController = {
         },
       });
       if (user) {
-         res.status(400).json({
+        res.status(400).json({
           message: "User already exists",
         });
-        return
       }
 
-      //console.log(resp, "user");
+      console.log(resp, "user");
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(resp.password, salt);
       const data = {
