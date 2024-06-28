@@ -383,6 +383,7 @@ const userController = {
                             title: task.title,
                             description: task.description,
                             day: index + 1,
+                            status:"incomplete"
                         })),
                     },
                 },
@@ -430,7 +431,6 @@ const userController = {
     async getTaskSet(req, res, next) {
         const { taskSetId } = req.params;
         const userId = req.user.id;
-
         try {
             const taskSet = await prisma.taskSet.findUnique({
                 where: { id: taskSetId },
@@ -438,11 +438,9 @@ const userController = {
                 tasks:true
                 }
             });
-
             if (!taskSet) {
                 return res.status(404).json({ error: 'TaskSet not found' });
             }
-            
             const UserTaskSet = await prisma.userTaskSet.findFirst({
                 where: { userId, taskSetId },
                  include: {
@@ -451,12 +449,8 @@ const userController = {
                             tasks: true,
                         },
                     },
-                 
                 },
             });
-
-            
-
             res.json(UserTaskSet);
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -517,6 +511,10 @@ const userController = {
             },
         });
 
+      await prisma.task.update({
+        where: { id: taskId },
+        data: { status: "completed" },
+      });
         res.json(taskCompletion);
     } catch (error) {
         res.status(500).json({ error: error.message });
