@@ -359,15 +359,14 @@ const userController = {
       res.status(500).json({ error: err.message });
     }
   },
-     async createTaskSet(req, res, next) {
-        const { name, tasks } = req.body;
-        const userId = req.user.id;
+  async createTaskSet(req, res, next) {
+    const { name, tasks } = req.body;
+    const userId = req.user.id;
 
-        try {
-            
-            const user = await prisma.user.findUnique({
-                where: { id: userId },
-            });
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
 
          
             if (user.role !== 'Mentor') {
@@ -383,45 +382,46 @@ const userController = {
                             title: task.title,
                             description: task.description,
                             day: index + 1,
-                            status:"incomplete"
                         })),
                     },
                 },
             });
 
-            res.json(taskSet);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
-    async startTaskSet(req, res, next) {
-        const { taskSetId } = req.params;
-        const userId = req.user.id;
+      res.json(taskSet);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+  async startTaskSet(req, res, next) {
+    const { taskSetId } = req.params;
+    const userId = req.user.id;
 
-        try {
-            const taskSet = await prisma.taskSet.findUnique({
-                where: { id: taskSetId },
-            });
+    try {
+      const taskSet = await prisma.taskSet.findUnique({
+        where: { id: taskSetId },
+      });
 
-            if (!taskSet) {
-                return res.status(404).json({ error: 'TaskSet not found' });
-            }
+      if (!taskSet) {
+        return res.status(404).json({ error: "TaskSet not found" });
+      }
 
-            const existingUserTaskSet = await prisma.userTaskSet.findFirst({
-                where: { userId, taskSetId },
-            });
+      const existingUserTaskSet = await prisma.userTaskSet.findFirst({
+        where: { userId, taskSetId },
+      });
 
-            if (existingUserTaskSet) {
-                return res.status(400).json({ error: 'User has already started this TaskSet' });
-            }
+      if (existingUserTaskSet) {
+        return res
+          .status(400)
+          .json({ error: "User has already started this TaskSet" });
+      }
 
-            const userTaskSet = await prisma.userTaskSet.create({
-                data: {
-                    userId,
-                    taskSetId,
-                    startDate: new Date(),
-                },
-            });
+      const userTaskSet = await prisma.userTaskSet.create({
+        data: {
+          userId,
+          taskSetId,
+          startDate: new Date(),
+        },
+      });
 
             res.json(userTaskSet);
         } catch (error) {
@@ -431,6 +431,7 @@ const userController = {
     async getTaskSet(req, res, next) {
         const { taskSetId } = req.params;
         const userId = req.user.id;
+
         try {
             const taskSet = await prisma.taskSet.findUnique({
                 where: { id: taskSetId },
@@ -438,9 +439,11 @@ const userController = {
                 tasks:true
                 }
             });
+
             if (!taskSet) {
                 return res.status(404).json({ error: 'TaskSet not found' });
             }
+            
             const UserTaskSet = await prisma.userTaskSet.findFirst({
                 where: { userId, taskSetId },
                  include: {
@@ -449,8 +452,12 @@ const userController = {
                             tasks: true,
                         },
                     },
+                 
                 },
             });
+
+            
+
             res.json(UserTaskSet);
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -461,103 +468,100 @@ const userController = {
     const userId = req.user.id;
 
     try {
-       
-        const task = await prisma.task.findUnique({
-            where: { id: taskId },
-        });
-
-        if (!task) {
-            return res.status(404).json({ error: 'Task not found' });
-        }
-
-        
-        const userTaskSet = await prisma.userTaskSet.findFirst({
-            where: {
-                userId,
-                taskSetId: task.taskSetId,
-            },
-        });
-       
-       // console.log("ttttttt",userTaskSet);
-       
-        if (!userTaskSet) {
-            return res.status(400).json({ error: 'User has not started this TaskSet' });
-        }
-
-      
-        const today = new Date();
-        const taskDate = new Date(userTaskSet.startDate);
-        taskDate.setDate(taskDate.getDate() + task.day - 1);
-
-        if (today.toDateString() !== taskDate.toDateString()) {
-            return res.status(400).json({ error: 'This task can only be completed on the assigned day' });
-        }
-
-        
-        const existingCompletion = await prisma.taskCompletion.findFirst({
-            where: { userTaskSetId: userTaskSet.id, taskId },
-        });
-
-        if (existingCompletion) {
-            return res.status(400).json({ error: 'Task is already completed' });
-        }
-
-       
-        const taskCompletion = await prisma.taskCompletion.create({
-            data: {
-                userTaskSetId: userTaskSet.id,
-                taskId,
-                completedAt: new Date(),
-            },
-        });
-
-      await prisma.task.update({
+      const task = await prisma.task.findUnique({
         where: { id: taskId },
-        data: { status: "completed" },
       });
+
+      if (!task) {
+        return res.status(404).json({ error: "Task not found" });
+      }
+
+      const userTaskSet = await prisma.userTaskSet.findFirst({
+        where: {
+          userId,
+          taskSetId: task.taskSetId,
+        },
+      });
+
+      // console.log("ttttttt",userTaskSet);
+
+      if (!userTaskSet) {
+        return res
+          .status(400)
+          .json({ error: "User has not started this TaskSet" });
+      }
+
+      const today = new Date();
+      const taskDate = new Date(userTaskSet.startDate);
+      taskDate.setDate(taskDate.getDate() + task.day - 1);
+
+      if (today.toDateString() !== taskDate.toDateString()) {
+        return res.status(400).json({
+          error: "This task can only be completed on the assigned day",
+        });
+      }
+
+      const existingCompletion = await prisma.taskCompletion.findFirst({
+        where: { userTaskSetId: userTaskSet.id, taskId },
+      });
+
+      if (existingCompletion) {
+        return res.status(400).json({ error: "Task is already completed" });
+      }
+
+      const taskCompletion = await prisma.taskCompletion.create({
+        data: {
+          userTaskSetId: userTaskSet.id,
+          taskId,
+          completedAt: new Date(),
+        },
+      });
+
         res.json(taskCompletion);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
-},
-async getUserTaskSetProgress(req, res, next) {
-        const { taskSetId } = req.params;
-        const userId = req.user.id;
+  },
+  async getUserTaskSetProgress(req, res, next) {
+    const { taskSetId } = req.params;
+    const userId = req.user.id;
 
-        try {
-            const userTaskSet = await prisma.userTaskSet.findFirst({
-                where: {
-                    userId,
-                    taskSetId,
-                },
-                include: {
-                    taskSet: {
-                        include: {
-                            tasks: true,
-                        },
-                    },
-                    completedTasks: true,
-                },
-            });
+    try {
+      const userTaskSet = await prisma.userTaskSet.findFirst({
+        where: {
+          userId,
+          taskSetId,
+        },
+        include: {
+          taskSet: {
+            include: {
+              tasks: true,
+            },
+          },
+          completedTasks: true,
+        },
+      });
 
-            if (!userTaskSet) {
-                return res.status(404).json({ error: 'TaskSet not found for user' });
-            }
+      if (!userTaskSet) {
+        return res.status(404).json({ error: "TaskSet not found for user" });
+      }
 
-            const completedTasks = userTaskSet.completedTasks.map(task => task.taskId);
-            const progress = userTaskSet.taskSet.tasks.map(task => ({
-                ...task,
-                completed: completedTasks.includes(task.id),
-            }));
+      const completedTasks = userTaskSet.completedTasks.map(
+        (task) => task.taskId
+      );
+      const progress = userTaskSet.taskSet.tasks.map((task) => ({
+        ...task,
+        completed: completedTasks.includes(task.id),
+      }));
 
-            res.json({
-                taskSet: userTaskSet.taskSet.name,
-                startDate: userTaskSet.startDate,
-                progress,
-            });
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
+      res.json({
+        taskSet: userTaskSet.taskSet.name,
+        startDate: userTaskSet.startDate,
+        progress,
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
+  },
 };
 export default userController;

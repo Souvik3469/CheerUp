@@ -25,7 +25,11 @@ router.get("/get-mytest", authMiddleware, userController.getMyTests);
 router.get("/get-alltest", userController.getAllTests);
 router.delete("/delete-test/:id", authMiddleware, userController.deleteTest);
 router.post("/create-taskset", authMiddleware, userController.createTaskSet);
-router.get("/get-taskset/:taskSetId", authMiddleware, userController.getTaskSet);
+router.get(
+  "/get-taskset/:taskSetId",
+  authMiddleware,
+  userController.getTaskSet
+);
 
 router.post(
   "/start-taskset/:taskSetId",

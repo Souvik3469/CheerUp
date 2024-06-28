@@ -1,20 +1,19 @@
 import React, { FC } from "react";
-
 import Sidebar from "./_components/sidebar";
+
 interface PageProps {
   children: React.ReactNode;
 }
-const layout: FC<PageProps> = ({ children }) => {
+
+const Layout: FC<PageProps> = ({ children }) => {
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="">
-        {" "}
-        <div className="bg-blue-300 w-[300px] h-screen">a</div>
+    <div className="flex h-screen">
+      <div className="flex-none">
+        <Sidebar />
       </div>
-      <div className=" w-full">{children}</div>
+      <div className="flex-grow overflow-auto">{children}</div>
     </div>
   );
 };
 
-export default layout;
+export default Layout;
