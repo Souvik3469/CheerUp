@@ -35,10 +35,36 @@ const getMyRequestedMeetings = async () => {
 
   return data;
 };
+export const confirmMeeting = async (meetinginfo) => {
+  const { data } = await AuthAPI().post("/user/confirm-meeting", meetinginfo);
+
+  return data;
+};
+export const rejectMeeting = async (meetinginfo) => {
+  const { data } = await AuthAPI().post("/user/reject-meeting", meetinginfo);
+
+  return data;
+};
+const getMentorMeetings = async () => {
+  const { data } = await AuthAPI().get("/user/get-meetings");
+
+  return data;
+};
 export const Mymeetings = () =>
   useQuery({
     queryKey: ["meetings"],
     queryFn: () => getMyRequestedMeetings(),
+    select: (data) => {
+      console.log(data.message, "data");
+      const res = data.message;
+      return res;
+    },
+  });
+
+export const MentorMeetings = () =>
+  useQuery({
+    queryKey: ["mentor-meeting"],
+    queryFn: () => getMentorMeetings(),
     select: (data) => {
       console.log(data.message, "data");
       const res = data.message;

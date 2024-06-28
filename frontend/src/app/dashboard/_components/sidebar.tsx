@@ -1,3 +1,5 @@
+"use client";
+import { GetUserQuery } from "@/api/user";
 import {
   Calendar,
   Home,
@@ -9,6 +11,7 @@ import Link from "next/link";
 import React from "react";
 
 function Sidebar() {
+  const getUserDetails = GetUserQuery();
   return (
     <div className="flex">
       <div className="flex flex-col gap-10 p-5 h-screen bg-stone-900">
@@ -17,10 +20,17 @@ function Sidebar() {
           <Home className="text-white" />
         </Link>
         <Calendar className="text-white" />
-        <Link href="/dashboard/meeting">
-          {" "}
-          <SquareMenu className="text-white" />
-        </Link>
+        {getUserDetails?.data?.role === "Mentor" ? (
+          <Link href="/dashboard/mentor-meetings">
+            {" "}
+            <SquareMenu className="text-white" />
+          </Link>
+        ) : (
+          <Link href="/dashboard/mentor">
+            {" "}
+            <SquareMenu className="text-white" />
+          </Link>
+        )}
         <Link href="/dashboard/dailytask" className="text-white">
           My Task
         </Link>

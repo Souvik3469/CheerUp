@@ -24,12 +24,16 @@ const AuthAPI = () => {
 const api = AuthAPI();
 export const startMyTask = async () => {
   const response = await api.post(
-    `/user/start-taskset/667b187cf425391f23818199`
+    `/user/start-taskset/667f16a54caf61b259976e5c`
   );
   return response.data;
 };
 export const getMyDailyTasks = async () => {
-  const response = await api.get(`/user/get-taskset/667b187cf425391f23818199`);
+  const response = await api.get(`/user/get-taskset/667f16a54caf61b259976e5c`);
+  return response.data;
+};
+export const completeTask = async (id) => {
+  const response = await api.post(`/user/complete-task/${id}`);
   return response.data;
 };
 export const getMyDailyTaskQuery = () =>

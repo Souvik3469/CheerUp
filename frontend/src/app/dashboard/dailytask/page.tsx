@@ -1,11 +1,20 @@
 "use client";
-import { getMyDailyTaskQuery } from "@/api/tasks";
+import { completeTask, getMyDailyTaskQuery } from "@/api/tasks";
 import React, { useEffect, useState } from "react";
 import Loading from "../_components/Loader";
+import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 
 function page() {
   const [taskSet, setTaskSet] = useState();
-
+  const complete = async (id) => {
+    try {
+      const data = await completeTask(id);
+      console.log(data, "data");
+    } catch (err) {
+      toast(err?.response.data.error);
+    }
+  };
   const { data: myTaskSet, isLoading: taskSetLoading } = getMyDailyTaskQuery();
   console.log(myTaskSet?.taskSet, "mytasks");
   useEffect(() => {
@@ -29,6 +38,18 @@ function page() {
                 <div className="bg-white rounded-xl p-4 m-5 ">
                   <div className="text-3xl font-semibold">{task.title}</div>
                   <div>{task?.description}</div>
+                  <div>{task?.status} </div>
+                  {task?.status !== "completed" ? (
+                    <Button
+                      onClick={() => {
+                        complete(task.id);
+                      }}
+                    >
+                      complete Task
+                    </Button>
+                  ) : (
+                    ""
+                  )}
                 </div>
               );
             })}{" "}
