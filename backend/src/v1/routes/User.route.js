@@ -1,6 +1,7 @@
 import express from "express";
 import { meetController, userController } from "../controllers";
 import authMiddleware from "../middlewares/Auth.middleware";
+import eventController from "../controllers/event/event";
 
 const router = express.Router();
 router.post("/book-meeting", authMiddleware, meetController.bookMeeting);
@@ -45,4 +46,9 @@ router.post(
   authMiddleware,
   userController.getUserTaskSetProgress
 );
+router.post("/create-event", authMiddleware, eventController.createEvent);
+router.get("/get-allevents", authMiddleware, eventController.getAllEvents);
+router.get("/get-myevents", authMiddleware, eventController.getMyEvents);
+router.delete("/delete-event/:eventId", authMiddleware, eventController.deleteEvent);
+router.patch("/delete-event/:eventId", authMiddleware, eventController.updateEvent);
 export default router;
