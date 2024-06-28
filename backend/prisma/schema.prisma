@@ -1,0 +1,148 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id              String        @id @default(auto()) @map("_id") @db.ObjectId
+    name            String?
+    email           String?       @unique
+    role            String?       @default("User") // User,Mentor,NGO
+    bio             String?
+    image           String?
+    coverImage      String?
+    profileImage    String?
+    password        String?
+    document        String?
+    questions       Question[]
+    answers         Answer[]
+    tests           Test[]
+    taskSets        UserTaskSet[]
+    meetingsAsHost  Meeting[]     @relation("host")
+    meetingsAsGuest Meeting[]     @relation("guest")
+    createdAt       DateTime      @default(now())
+    updatedAt       DateTime      @updatedAt
+    hasNotification Boolean?
+}
+
+model Question {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    text      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    answers   Answer[]
+    user      User?    @relation(fields: [userId], references: [id])
+    userId    String?
+}
+
+model Answer {
+    id         String    @id @default(auto()) @map("_id") @db.ObjectId
+    text       String
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
+    owner      User      @relation(fields: [userId], references: [id])
+    question   Question? @relation(fields: [questionId], references: [id])
+    questionId String?
+    userId     String
+}
+
+model Test {
+    id        String         @id @default(auto()) @map("_id") @db.ObjectId
+    title     String
+    mentor    User           @relation(fields: [userId], references: [id])
+    userId    String
+    questions TestQuestion[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model TestQuestion {
+    id      String       @id @default(auto()) @map("_id") @db.ObjectId
+    text    String
+    test    Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
+    testId  String
+    options TestOption[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model TestOption {
+    id         String       @id @default(auto()) @map("_id") @db.ObjectId
+    text       String
+    score      Int
+    question   TestQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    questionId String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Meeting {
+    id       String  @id @default(auto()) @map("_id") @db.ObjectId
+    host     User    @relation("host", fields: [hostId], references: [id], onDelete: Cascade)
+    guest    User    @relation("guest", fields: [guestId], references: [id], onDelete: Cascade)
+    hostId   String
+    guestId  String
+    status   String
+    notes    String?
+    duration Int?
+    type     String?
+    location String?
+    dates    Date[]
+}
+
+model Date {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    date      DateTime
+    meeting   Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+    meetingId String
+}
+
+model TaskSet {
+    id          String        @id @default(auto()) @map("_id") @db.ObjectId
+    name        String
+    tasks       Task[]
+    userTaskSet UserTaskSet[]
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+}
+
+model Task {
+    id            String           @id @default(auto()) @map("_id") @db.ObjectId
+    title         String
+    description   String
+    taskSet       TaskSet          @relation(fields: [taskSetId], references: [id], onDelete: Cascade)
+    taskSetId     String
+    taskCompleted TaskCompletion[]
+    day           Int
+    createdAt     DateTime         @default(now())
+    updatedAt     DateTime         @updatedAt
+}
+
+model UserTaskSet {
+    id             String           @id @default(auto()) @map("_id") @db.ObjectId
+    user           User             @relation(fields: [userId], references: [id])
+    userId         String
+    taskSet        TaskSet          @relation(fields: [taskSetId], references: [id])
+    taskSetId      String
+    startDate      DateTime
+    completedTasks TaskCompletion[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model TaskCompletion {
+    id            String      @id @default(auto()) @map("_id") @db.ObjectId
+    userTaskSet   UserTaskSet @relation(fields: [userTaskSetId], references: [id], onDelete: Cascade)
+    userTaskSetId String
+    task          Task        @relation(fields: [taskId], references: [id])
+    taskId        String
+    completedAt   DateTime    @default(now())
+}
