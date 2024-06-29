@@ -1,5 +1,7 @@
 import { GetUserQuery } from "@/api/user";
 import { Calendar, ClipboardPlus, Loader, Timer } from "lucide-react";
+import "chart.js/auto";
+import { Bar, Pie, Line, Doughnut } from "react-chartjs-2";
 import React, { useEffect, useState } from "react";
 import WeekPicker from "./Calandar";
 import Image from "next/image";
@@ -16,7 +18,7 @@ function DashboardPanel() {
   const [completedTasks, setCompletedTask] = useState([]);
   console.log(myTaskSet?.taskSet, "mytasks");
   const completedTask = () => {
-    const data = myTaskSet?.taskSet.tasks;
+    const data = myTaskSet?.taskSet?.tasks;
     const filteredData = data?.filter((d) => d.status === "completed");
     console.log(filteredData, "f");
     setCompletedTask(filteredData);
@@ -66,6 +68,39 @@ function DashboardPanel() {
   const startTracking = async () => {
     const { data } = await startMyTask();
     console.log(data, "data from startmeeting");
+  };
+  const barData = {
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [
+      {
+        label: "Monthly Score",
+        data: [65, 59, 80, 81, 56, 55, 40],
+        backgroundColor: "rgba(0, 0, 255, 1)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const lineData = {
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [
+      {
+        label: "Monthly Score",
+        data: [28, 48, 40, 19, 86, 27, 90],
+        fill: false,
+        borderColor: "rgba(0, 128, 0, 1)",
+        tension: 0.1,
+      },
+    ],
+  };
+
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
   };
   return (
     <div className="m-5">
@@ -122,36 +157,33 @@ function DashboardPanel() {
             <div className="flex flex-col">
               <div>
                 <div className=" font-comf font-semibold text-3xl">
-                  Patient Activites
+                  Mental Health Progress
                 </div>
+                <div className="flex flex-row justify-center gap-8 p-6">
+                  <div className="border border-gray-300 rounded-3xl p-2 w-[320px] h-[250px] rounded-xl flex items-center justify-center">
+                    <Bar data={barData} options={options} />
+                  </div>
+                  <div className="border border-gray-300 rounded-3xl p-2 w-[320px] h-[250px] rounded-xl flex items-center justify-center">
+                    <Line data={lineData} options={options} />
+                  </div>
+                </div>
+                {/* <div className="flex gap-8 p-6">
+                  <div
+                    className=" border border-gray-300 rounded-3xl
+                         p-2 w-[320px] h-[320px] rounded-xl"
+                  ></div>
+                  <div
+                    className=" border border-gray-300 rounded-3xl
+                         p-2 w-[320px] h-[320px] rounded-xl"
+                  ></div>
+                </div> */}
               </div>
-            </div>
-            <div className="w-[24%]  bg-gradient-to-t p-5 from-green-200 to-green-400  ">
-              <div className="text-center font-semibold mb-5 ">
-                Daily Progress
-              </div>
-
-              <CircularProgressbar
-                value={percentage}
-                className="w-10"
-                text={`${percentage}%`}
-                styles={buildStyles({
-                  rotation: 0.25,
-                  strokeLinecap: "butt",
-                  textSize: "16px",
-                  pathTransitionDuration: 0.5,
-                  pathColor: `#729762`,
-                  textColor: "black",
-                  trailColor: "white",
-                  backgroundColor: "#597445",
-                })}
-              />
             </div>
           </div>
           <div className="py-20">
             <div>
               <div className=" font-comf font-semibold text-2xl mb-5">
-                Complteted Tasks
+                Completed Tasks
               </div>
             </div>
             {completedTasks &&
@@ -183,23 +215,49 @@ function DashboardPanel() {
               })}
           </div>
         </div>
-        <div>
+        <div className="flex flex-col">
           <h1 className="text-start mb-3">Your Daily Routine</h1>
-          <div className="border border-gray-300 rounded-xl">
-            <WeekPicker completedTasks={completedTasks} />
+          <div className="flex flex-row">
+            <div className="border border-gray-300 rounded-xl">
+              <WeekPicker completedTasks={completedTasks} />
+            </div>
           </div>
-          {myTaskSet?.taskSet ? (
-            ""
-          ) : (
-            <Button
-              onClick={() => {
-                startTracking();
-              }}
-              className="mt-4"
-            >
-              Start Your Progress Tracking
-            </Button>
-          )}
+          <div className="p-6">
+            <div className="mb-5">
+              {myTaskSet?.taskSet ? (
+                ""
+              ) : (
+                <Button
+                  onClick={() => {
+                    startTracking();
+                  }}
+                  className="mt-4"
+                >
+                  Start Your Progress Tracking
+                </Button>
+              )}
+            </div>
+            <div className="w-[200px] h-[250px] bg-gray-200 border border-gray-300 rounded-xl p-6">
+              <div className="text-center font-semibold mb-5">
+                Daily Progress
+              </div>
+              <CircularProgressbar
+                value={percentage}
+                className="w-8"
+                text={`${percentage}%`}
+                styles={buildStyles({
+                  rotation: 0.25,
+                  strokeLinecap: "butt",
+                  textSize: "16px",
+                  pathTransitionDuration: 0.5,
+                  pathColor: `#3C17B5`,
+                  textColor: "black",
+                  trailColor: "white",
+                  backgroundColor: "#597445",
+                })}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

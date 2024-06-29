@@ -8,7 +8,7 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { DayCalendarSkeleton } from "@mui/x-date-pickers/DayCalendarSkeleton";
 import { SmileIcon } from "lucide-react";
 
-const initialValue = dayjs("2022-04-17");
+const initialValue = dayjs("2024-06-29");
 
 function ServerDay(
   props: PickersDayProps<Dayjs> & { highlightedDays?: number[] }
@@ -38,14 +38,16 @@ export default function DateCalendarServerRequest({ completedTasks }) {
   const requestAbortController = React.useRef<AbortController | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [highlightedDays, setHighlightedDays] = React.useState<number[]>([]);
-
+  console.log(completedTasks, "s");
   React.useEffect(() => {
     // Extract days from completedTasks and update the highlightedDays state
-    const daysToHighlight = completedTasks?.map((task) =>
-      dayjs()
-        .add(task.day - 1, "day")
-        .date()
-    );
+    const daysToHighlight =
+      completedTasks &&
+      completedTasks?.map((task) =>
+        dayjs()
+          .add(task.day - 1, "day")
+          .date()
+      );
     setHighlightedDays(daysToHighlight);
   }, [completedTasks]);
 

@@ -20,7 +20,17 @@ function Sidebar() {
     <div className="flex">
       <div className="flex flex-col gap-10 p-5 h-screen bg-stone-900">
         <Tooltip title="Dashboard">
-          <LayoutDashboard className="text-white" />
+          {getUserDetails.data?.role === "Mentor" ? (
+            <>
+              <Link href="/dashboard">
+                <LayoutDashboard className="text-white" />
+              </Link>
+            </>
+          ) : (
+            <Link href="/dashboard/mentor-meetings">
+              <LayoutDashboard className="text-white" />
+            </Link>
+          )}
         </Tooltip>
         <Tooltip title="Home">
           <Link href="/">
@@ -31,21 +41,34 @@ function Sidebar() {
           <Calendar className="text-white" />
         </Tooltip>
         <Tooltip title="Meetings">
-          <Link href="/dashboard/meeting">
-            {" "}
-            <SquareMenu className="text-white" />
-          </Link>
+          {getUserDetails?.data?.role === "Mentor" ? (
+            <Link href="/dashboard/mentor-meetings">
+              {" "}
+              <SquareMenu className="text-white" />
+            </Link>
+          ) : (
+            <Link href="/dashboard/meeting">
+              {" "}
+              <SquareMenu className="text-white" />
+            </Link>
+          )}
         </Tooltip>
-        <Tooltip title="My Tasks">
-          <Link href="/dashboard/dailytask" className="text-white">
-            <BookOpenCheck className="text-white" />
-          </Link>
-        </Tooltip>
-        <Tooltip title="create NGO evets">
-          <Link href="/dashboard/NGO/createEvent" className="text-white">
-            <FilePlus className="text-white" />
-          </Link>
-        </Tooltip>
+        {getUserDetails?.data?.role === "NGO" ? (
+          <>
+            <Tooltip title="My Tasks">
+              <Link href="/dashboard/dailytask" className="text-white">
+                <BookOpenCheck className="text-white" />
+              </Link>
+            </Tooltip>
+            <Tooltip title="create NGO evets">
+              <Link href="/dashboard/NGO/createEvent" className="text-white">
+                <FilePlus className="text-white" />
+              </Link>
+            </Tooltip>
+          </>
+        ) : (
+          <></>
+        )}
         <Tooltip title="all NGO evets">
           <Link href="/dashboard/NGO/allEvents" className="text-white">
             <ReceiptText className="text-white" />

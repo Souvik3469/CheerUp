@@ -26,20 +26,13 @@ const userController = {
   },
   async getAllQuestionandAnswer(req, res, next) {
     try {
-      const searchText = req.query.searchText;
       const questions = await prisma.question.findMany({
-        where: {
-          text: {
-            contains: searchText,
-          },
-        },
         include: {
           answers: {
             include: {
               owner: true,
             },
           },
-          User: true,
         },
       });
 
@@ -196,7 +189,7 @@ const userController = {
 
       const existingQuestion = await prisma.question.findUnique({
         where: {
-          id: parseInt(questionId),
+          id: questionId,
         },
       });
 
@@ -207,7 +200,7 @@ const userController = {
       const answer = await prisma.answer.create({
         data: {
           text: text,
-          questionId: parseInt(questionId),
+          questionId: questionId,
           userId: userId,
         },
       });
@@ -368,24 +361,24 @@ const userController = {
         where: { id: userId },
       });
 
-         
-            if (user.role !== 'Mentor') {
-                return res.status(403).json({ error: 'Only mentors can create task sets' });
-            }
+      if (user.role !== "Mentor") {
+        return res
+          .status(403)
+          .json({ error: "Only mentors can create task sets" });
+      }
 
-       
-            const taskSet = await prisma.taskSet.create({
-                data: {
-                    name,
-                    tasks: {
-                        create: tasks.map((task, index) => ({
-                            title: task.title,
-                            description: task.description,
-                            day: index + 1,
-                        })),
-                    },
-                },
-            });
+      const taskSet = await prisma.taskSet.create({
+        data: {
+          name,
+          tasks: {
+            create: tasks.map((task, index) => ({
+              title: task.title,
+              description: task.description,
+              day: index + 1,
+            })),
+          },
+        },
+      });
 
       res.json(taskSet);
     } catch (error) {
@@ -423,47 +416,44 @@ const userController = {
         },
       });
 
-            res.json(userTaskSet);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
-    async getTaskSet(req, res, next) {
-        const { taskSetId } = req.params;
-        const userId = req.user.id;
+      res.json(userTaskSet);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+  async getTaskSet(req, res, next) {
+    const { taskSetId } = req.params;
+    const userId = req.user.id;
 
-        try {
-            const taskSet = await prisma.taskSet.findUnique({
-                where: { id: taskSetId },
-                include:{
-                tasks:true
-                }
-            });
+    try {
+      const taskSet = await prisma.taskSet.findUnique({
+        where: { id: taskSetId },
+        include: {
+          tasks: true,
+        },
+      });
 
-            if (!taskSet) {
-                return res.status(404).json({ error: 'TaskSet not found' });
-            }
-            
-            const UserTaskSet = await prisma.userTaskSet.findFirst({
-                where: { userId, taskSetId },
-                 include: {
-                    taskSet: {
-                        include: {
-                            tasks: true,
-                        },
-                    },
-                 
-                },
-            });
+      if (!taskSet) {
+        return res.status(404).json({ error: "TaskSet not found" });
+      }
 
-            
+      const UserTaskSet = await prisma.userTaskSet.findFirst({
+        where: { userId, taskSetId },
+        include: {
+          taskSet: {
+            include: {
+              tasks: true,
+            },
+          },
+        },
+      });
 
-            res.json(UserTaskSet);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
-    async completeTask(req, res, next) {
+      res.json(UserTaskSet);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+  async completeTask(req, res, next) {
     const { taskId } = req.params;
     const userId = req.user.id;
 
@@ -517,7 +507,7 @@ const userController = {
         },
       });
 
-        res.json(taskCompletion);
+      res.json(taskCompletion);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
