@@ -186,9 +186,9 @@ function DashboardPanel() {
         <div>
           <h1 className="text-start mb-3">Your Daily Routine</h1>
           <div className="border border-gray-300 rounded-xl">
-            <WeekPicker />
+            <WeekPicker completedTasks={completedTasks} />
           </div>
-          {myTaskSet.taskSet ? (
+          {myTaskSet?.taskSet ? (
             ""
           ) : (
             <Button
