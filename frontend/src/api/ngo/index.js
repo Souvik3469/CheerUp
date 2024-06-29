@@ -24,7 +24,7 @@ const AuthAPI = () => {
 const api = AuthAPI();
 
 export const createEvent = async (eventinfo) => {
-  const { data } = await AuthAPI().post("/create-event", eventinfo);
+  const { data } = await api.post("/create-event", eventinfo);
   console.log("ngo index.js", data);
   return response.data;
 };
