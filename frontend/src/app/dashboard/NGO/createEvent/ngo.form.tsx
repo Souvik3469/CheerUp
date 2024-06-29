@@ -88,7 +88,7 @@ function Ngoform() {
   };
 
   return (
-    <div className="w-4/5 my-auto mx-auto flex flex-col gap-10">
+    <div className="w-4/5 my-auto mx-auto flex flex-col gap-10 pb-10">
       <div className="text-4xl font-semibold">
         Please Enter Your Details About Ngo Program
       </div>

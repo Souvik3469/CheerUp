@@ -198,7 +198,7 @@ function Discuss() {
           </form>
         </div>
         <div>
-          <div className="flex bg-gray-200 w-[200px] p-2 m-4 rounded-lg justify-center">
+          <div className="flex bg-gray-200 w-[260px] p-2 m-4 rounded-lg justify-center">
             <div
               className={`cursor-pointer mr-4 ${
                 activeTab === "all"
@@ -207,7 +207,7 @@ function Discuss() {
               }`}
               onClick={() => setActiveTab("all")}
             >
-              All Posts
+              All Questions
             </div>
             <div
               className={`cursor-pointer ${
@@ -217,7 +217,7 @@ function Discuss() {
               }`}
               onClick={() => setActiveTab("my")}
             >
-              My Posts
+              My Questions
             </div>
           </div>
         </div>
@@ -230,7 +230,7 @@ function Discuss() {
         ) : (
           <div>
             {filteredData?.length > 0 &&
-              filteredData?.map((question) => (
+              filteredData?.map((question, ind) => (
                 <>
                   <div
                     key={question.id}
@@ -238,8 +238,7 @@ function Discuss() {
                   >
                     <div className="flex gap-2">
                       <h1 className="text-xl font-semi-bold mb-2">
-                        #{question?.id}
-                        {")"}
+                        #{ind + 1}
                       </h1>
                       <h3 className="text-lg font-bold mb-2">
                         {question?.text}

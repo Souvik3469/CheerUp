@@ -21,8 +21,6 @@ export default function Home() {
       <SectionHero />
       <SectionTrust />
       <SectionProcess />
-      <SectionConsult />
-
       <Footer />
     </div>
   );

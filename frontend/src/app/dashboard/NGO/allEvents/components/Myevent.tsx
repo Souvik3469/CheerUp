@@ -15,7 +15,7 @@ interface eventCardProps {
   startDate: String;
   // d_option: Boolean;
 }
-const Event: FC<eventCardProps> = ({
+const MyEvent: FC<eventCardProps> = ({
   id,
   name,
   description,
@@ -24,6 +24,7 @@ const Event: FC<eventCardProps> = ({
   startDate,
   // d_option,
 }) => {
+  console.log(startDate && startDate[0], "st");
   const handleJoinEvent = async () => {
     try {
       const data = registerEvent(id);
@@ -34,40 +35,40 @@ const Event: FC<eventCardProps> = ({
   };
 
   return (
-    <div className="bg-white  flex flex-col  shadow-lg rounded-lg transition ease-in hover:-translate-y-1">
-      <div className="bg-gery-300 h-full flex "></div>
+    <div className="bg-grey-300 h-25 flex flex-col  shadow-lg rounded-lg  transition ease-in hover:-translate-y-1">
+      <div className="bg-gery-300 h-full flex items-center justify-center ">
+        <Image
+          height={50}
+          width={300}
+          // src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhuZMsc_-2l-WqV3xpCTHqi76yBY3qmK4FAQ&s"
+          src="https://static.vecteezy.com/system/resources/thumbnails/012/919/709/small_2x/ngo-or-non-governmental-organization-to-serve-specific-social-and-political-needs-in-template-hand-drawn-cartoon-flat-illustration-vector.jpg"
+          alt=""
+        />
+      </div>
       <div className=" flex justify-center flex-col  ">
-        <div className="px-3 py-1 gap-2  text-center text-xl font-semibold">
+        <div className="px-3  gap-2  text-center text-xl font-semibold">
           <span className="font-lg  "> {name}</span>
         </div>
         <div className=" gap-2  text-gray-500  text-center text-sm font-semibold">
           <span className="font-sm"> {description}</span>
         </div>
 
-        <div className="px-3 py-1 gap-2 text-sm font-semibold">
-          <p>
-            <span className="font-sm flex items-center gap-2 ">
-              <Globe className="w-5" />
-              {location}
-            </span>
-          </p>
-          <p className="flex  gap-2 items-center">
-            <TimerIcon />
+        <div className="flex justify-between p-4 items-center">
+          <div className="px-3 mt-2 gap-2 text-sm font-semibold">
+            <p>
+              <span className="font-sm flex items-center gap-2 ">
+                <Globe className="w-5" />
+                {location}
+              </span>
+            </p>
+            <p className="flex  gap-2 items-center">
+              <TimerIcon />
 
-            <span className="font-sm"> {startDate}</span>
-          </p>
-        </div>
-
-        <div className="px-5 py-4 flex justify-between">
-          <div>
-            {/* <Link href={`/dashboard/${id}`}> */}
-            <Button
-              onClick={handleJoinEvent}
-              // disabled={d_option}
-            >
-              Join Event
-            </Button>
-            {/* </Link> */}
+              <span className="font-sm">
+                {" "}
+                {startDate && startDate[0]?.date.substr(0, 10)}
+              </span>
+            </p>
           </div>
           <div>
             <AvatarGroup max={4} className="text-green-400">
@@ -119,4 +120,4 @@ const Event: FC<eventCardProps> = ({
   );
 };
 
-export default Event;
+export default MyEvent;

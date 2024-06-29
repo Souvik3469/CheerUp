@@ -12,9 +12,7 @@ const eventController = {
   // Only NGO can create an event
   async createEvent(req, res, next) {
     try {
-      // console.log("first");
       const { name, description, location, funding, dates } = req.body;
-      // console.log(name, description, location, funding, dates);
       const ngoid = req.user.id;
 
       // Check if the user is an NGO
@@ -53,7 +51,6 @@ const eventController = {
   },
 
   async getAllEvents(req, res, next) {
-    console.log("getAllEvents");
     try {
       const events = await prisma.event.findMany({
         include: {
@@ -93,6 +90,16 @@ const eventController = {
         },
         include: {
           date: true,
+          registeredUsers: {
+            select: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -180,6 +187,7 @@ const eventController = {
       res.status(500).json({ error: "Internal server error" });
     }
   },
+
   async registerForEvent(req, res, next) {
     try {
       const eventId = req.params.id;

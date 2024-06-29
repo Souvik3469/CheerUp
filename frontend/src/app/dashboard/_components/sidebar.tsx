@@ -11,6 +11,7 @@ import {
   BookOpenCheck,
   FilePlus,
   ReceiptText,
+  MessageCircleIcon,
 } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -20,7 +21,7 @@ import Event from "../NGO/allEvents/components/Event";
 function Sidebar() {
   const getUserDetails = GetUserQuery();
   const [events, setEvents] = useState([]);
-  const [alreadyReg, setAlredyReg] = useState([]);
+
   const [myevents, setMyEvents] = useState([]);
   const {
     isLoading: EventLoading,
@@ -52,15 +53,15 @@ function Sidebar() {
   if (EventLoading || MyEventLoading) {
     return <Loading />;
   }
-  const checkExistence = (id) => {
-    return myevents.some((ev) => ev.id === id);
-  };
-
+  // const checkExistence = (id) => {
+  //   return myevents.some((ev) => ev.id === id);
+  // };
+  // const getUserDetails = GetUserQuery();
   return (
     <div className="flex">
       <div className="flex flex-col gap-10 p-5 h-screen bg-stone-900">
         <Tooltip title="Dashboard">
-          {getUserDetails?.data?.role === "Mentor" ? (
+          {getUserDetails?.data?.role !== "Mentor" ? (
             <>
               <Link href="/dashboard">
                 <LayoutDashboard className="text-white" />
@@ -78,7 +79,9 @@ function Sidebar() {
           </Link>
         </Tooltip>
         <Tooltip title="Calender">
-          <Calendar className="text-white" />
+          <Link href="/dashboard/faq">
+            <MessageCircleIcon className="text-white" />
+          </Link>
         </Tooltip>
         <Tooltip title="Meetings">
           {getUserDetails?.data?.role === "Mentor" ? (
@@ -93,7 +96,7 @@ function Sidebar() {
             </Link>
           )}
         </Tooltip>
-        {getUserDetails?.data?.role === "NGO" ? (
+        {getUserDetails?.data?.role === "user" ? (
           <>
             <Tooltip title="My Tasks">
               <Link href="/dashboard/dailytask" className="text-white">
@@ -118,10 +121,10 @@ function Sidebar() {
           <Settings className="text-white" />
         </Tooltip>
       </div>
-      <div className=" w-[300px] h-screen overflow-scroll">
+      <div className=" min-w-[400px] h-screen overflow-hidden bg-slate-200">
         <div className="primary-container mt-4 ">
           <div className="text-center font-serif text-4xl">All Ngo Events</div>
-          <hr className="my-5" />
+
           <div className="grid grid-cols-1 p-4 gap-10">
             {events?.length > 0 ? (
               events?.map((ev: any) => (
@@ -134,7 +137,7 @@ function Sidebar() {
                   startDate={
                     ev.date && ev.date[0] && ev.date[0].date.substr(0, 10)!
                   }
-                  d_option={checkExistence(ev.id)}
+                  // d_option={checkExistence(ev.id)}
                 />
               ))
             ) : (

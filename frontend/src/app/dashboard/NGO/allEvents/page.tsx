@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import Event from "./components/Event";
 import { fetchMyEvents, fetchevents } from "@/api/ngo";
 import Loading from "../../_components/Loader";
+import { GetUserQuery } from "@/api/user";
+import MyEvent from "./components/Myevent";
 
 function page() {
   const [events, setEvents] = useState([]);
@@ -11,15 +13,16 @@ function page() {
     isLoading: EventLoading,
     data: eventdata,
     isError: EventError,
-  } = fetchMyEvents();
+  } = GetUserQuery();
   useEffect(() => {
     if (!EventLoading) {
-      setEvents(eventdata.message);
+      console.log("first", eventdata);
+      setEvents(eventdata.registeredEvents);
     }
   }, [EventLoading]);
-  const checkExistance = (id) => {
-    return events.some((ev) => ev.id === id);
-  };
+  // const checkExistance = (id) => {
+  //   return events.some((ev) => ev.id === id);
+  // };
   if (EventError) {
     return (
       <div>
@@ -35,25 +38,23 @@ function page() {
   return (
     <>
       <div className="primary-container mt-4 ">
-        <div className="text-center font-serif text-4xl">My Ngo Events</div>
+        <div className="text-center font-serif text-4xl">Registered Events</div>
         <hr className="my-5" />
         <div className="grid grid-cols-2 p-4 gap-10">
           {events?.length > 0 ? (
             events?.map((ev: any) => (
-              <Event
-                id={ev.id}
-                name={ev.name!}
-                description={ev?.description!}
-                funding={ev.funding!}
-                location={ev.location!}
-                startDate={
-                  ev.date && ev.date[0] && ev.date[0].date.substr(0, 10)!
-                }
-                d_option={checkExistance(ev.id)}
+              <MyEvent
+                id={ev.event.id}
+                name={ev.event.name!}
+                description={ev.event.description!}
+                funding={ev.event.funding!}
+                location={ev.event.location!}
+                startDate={ev.event.date}
+                // d_option={checkExistance(ev.id)}
               />
             ))
           ) : (
-            <div>""</div>
+            <div>"No Joined Events"</div>
           )}
         </div>
       </div>
