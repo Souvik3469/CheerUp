@@ -20,9 +20,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "www.ngoregistration.org",
+        hostname: "static.vecteezy.com",
       },
       // www.ngoregistration.org,
+      // "www.ngoregistration.org",
     ],
   },
 };

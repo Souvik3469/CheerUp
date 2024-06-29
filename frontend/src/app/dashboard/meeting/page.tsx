@@ -39,7 +39,7 @@ function page() {
           Available <span className="font-comf text-theme">Consultors</span>
         </div>
         <hr className="my-5" />
-        <div className="grid grid-cols-3 p-4 gap-4">
+        <div className="grid grid-cols-2 p-4 gap-4">
           {meetings?.length > 0 ? (
             meetings?.map((meet: any) => (
               <ConsultantCard
@@ -56,10 +56,10 @@ function page() {
         <div className="text-center font-serif text-4xl">
           Booked <span className="font-comf text-theme">Consultors</span>
         </div>
-        <div className="p-10">
+        <div className="w-full grid grid-cols-3">
           {mymeetings?.map((meet) => {
             return (
-              <div className="bg-gray-200 w-52 p-4 rounded-md shadow-md">
+              <div className="bg-gray-200 w-82 p-4 m-4 rounded-md shadow-md">
                 <div className="mb-2">
                   <div className="font-semibold text-lg">
                     Name: {meet.guest.name}
