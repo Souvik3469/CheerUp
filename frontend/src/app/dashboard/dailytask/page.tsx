@@ -67,35 +67,52 @@ function page() {
             {taskSet?.tasks?.map((task) => {
               const j = getStartDate(myTaskSet?.startDate, task.day).month;
               return (
-                <div className="bg-white rounded-xl p-4 m-5 ">
-                  <div className="text-3xl font-semibold">{task.title}</div>
-                  <div>{task?.description}</div>
-                  <div>{task?.status} </div>
-                  {task?.status === "completed" ? (
-                    ""
-                  ) : (
-                    <>
-                      <div className="flex gap-1">
-                        <div className="font-semibold">Opening on : </div>
-                        <div>
-                          {getStartDate(myTaskSet?.startDate, task.day).day}
-                        </div>
-                        <div>{getMonthName(j)}</div>
+                <div className="bg-white rounded-xl flex justify-between p-4 m-5 ">
+                  <div>
+                    <div className="flex gap-4 flex-col">
+                      <div className="text-3xl font-semibold">{task.title}</div>
+                      <div>{task?.description}</div>
+                      <div>
+                        {task?.status === "incomplete" ? (
+                          <div className="text-red-600 font-semibold">
+                            {task.status}{" "}
+                          </div>
+                        ) : (
+                          <div className="text-green-600 font-semibold">
+                            {task.status}{" "}
+                          </div>
+                        )}{" "}
                       </div>
-                    </>
-                  )}
-
-                  {task?.status !== "completed" ? (
-                    <Button
-                      onClick={() => {
-                        complete(task.id);
-                      }}
-                    >
-                      complete Task
-                    </Button>
-                  ) : (
-                    ""
-                  )}
+                    </div>
+                    <div>
+                      {task?.status !== "completed" ? (
+                        <Button
+                          onClick={() => {
+                            complete(task.id);
+                          }}
+                        >
+                          complete Task
+                        </Button>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    {task?.status === "completed" ? (
+                      ""
+                    ) : (
+                      <>
+                        <div className="flex gap-1">
+                          <div className="font-semibold">Opening on : </div>
+                          <div>
+                            {getStartDate(myTaskSet?.startDate, task.day).day}
+                          </div>
+                          <div>{getMonthName(j)}</div>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               );
             })}{" "}

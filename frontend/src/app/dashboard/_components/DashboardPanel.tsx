@@ -215,26 +215,28 @@ function DashboardPanel() {
               })}
           </div>
         </div>
-        <div>
+        <div className="flex flex-col">
           <h1 className="text-start mb-3">Your Daily Routine</h1>
           <div className="flex flex-row">
             <div className="border border-gray-300 rounded-xl">
-              <WeekPicker />
+              <WeekPicker completedTasks={completedTasks} />
             </div>
-            {myTaskSet?.taskSet ? (
-              ""
-            ) : (
-              <Button
-                onClick={() => {
-                  startTracking();
-                }}
-                className="mt-4"
-              >
-                Start Your Progress Tracking
-              </Button>
-            )}
           </div>
           <div className="p-6">
+            <div className="mb-5">
+              {myTaskSet?.taskSet ? (
+                ""
+              ) : (
+                <Button
+                  onClick={() => {
+                    startTracking();
+                  }}
+                  className="mt-4"
+                >
+                  Start Your Progress Tracking
+                </Button>
+              )}
+            </div>
             <div className="w-[200px] h-[250px] bg-gray-200 border border-gray-300 rounded-xl p-6">
               <div className="text-center font-semibold mb-5">
                 Daily Progress
