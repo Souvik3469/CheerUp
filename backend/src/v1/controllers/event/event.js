@@ -90,7 +90,7 @@ const eventController = {
         },
         include: {
           date: true,
-          registeredUsers: {
+           registeredUsers: {
             select: {
               user: {
                 select: {
@@ -101,6 +101,7 @@ const eventController = {
             },
           },
         },
+        
       });
 
       res.json({ success: true, message: events });
