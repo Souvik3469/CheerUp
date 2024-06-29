@@ -33,6 +33,7 @@ const userController = {
               owner: true,
             },
           },
+          user: true,
         },
       });
 
