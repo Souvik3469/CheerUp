@@ -61,6 +61,16 @@ const eventController = {
               email: true,
             },
           },
+          registeredUsers: {
+            select: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
         },
       });
       res.json({ success: true, message: events });
@@ -95,8 +105,8 @@ const eventController = {
       const eventId = req.params.id;
       const userId = req.user.id;
 
-      console.log("eventId",eventId);
-      console.log("userId",userId);
+      // console.log("eventId",eventId);
+      // console.log("userId",userId);
 
       const event = await prisma.event.findFirst({
         where: {
@@ -158,6 +168,57 @@ const eventController = {
       });
 
       res.json({ success: true, message: updatedEvent });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+    async registerForEvent(req, res, next) {
+    try {
+      const eventId  = req.params.id;
+      const userId = req.user.id;
+
+      // console.log('====================================');
+      // console.log("EventId1",eventId);
+      // console.log('====================================');
+
+      // Find the event
+      const event = await prisma.event.findUnique({
+        where: { id: eventId },
+      });
+
+      if (!event) {
+        return res.status(404).json({ error: "Event not found" });
+      }
+
+      // Check if the user is the NGO who created the event
+      if (event.ngoId === userId) {
+        return res.status(403).json({ error: "NGOs cannot register for their own events" });
+      }
+
+      // Check if the user is already registered for the event
+      const existingRegistration = await prisma.userEvent.findUnique({
+        where: {
+          userId_eventId: {
+            userId: userId,
+            eventId: eventId,
+          },
+        },
+      });
+
+      if (existingRegistration) {
+        return res.status(400).json({ error: "User is already registered for this event" });
+      }
+
+      // Register the user for the event
+      const userEvent = await prisma.userEvent.create({
+        data: {
+          userId,
+          eventId,
+        },
+      });
+
+      res.json({ success: true, message: "User registered for the event", userEvent });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Internal server error" });
