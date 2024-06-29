@@ -14,6 +14,7 @@ import {
   XCircleIcon,
 } from "lucide-react";
 import cht from "../assets/images.png";
+import Link from "next/link";
 
 function SectionHero() {
   const [loading, setloading] = useState(false);
@@ -54,7 +55,7 @@ function SectionHero() {
     <>
       <Navbar />
       <div className="grid grid-cols-2 gap-4 p-10 bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400 min-h-screen items-center">
-        <div className="flex flex-col justify-center text-center sm:text-left w-full sm:w-[80%]">
+        <div className="flex ml-20 flex-col justify-center text-center sm:text-left w-full sm:w-[80%]">
           <h1 className="text-5xl font-semibold mb-4 animate-fade-in">
             Your One-Stop Solution for Mental Well-being
           </h1>
@@ -74,9 +75,11 @@ function SectionHero() {
               delaySpeed={1000}
             />
           </div>
-          <Button className="text-xl w-[200px] mt-4 mx-auto sm:mx-0 animate-fade-in-delay">
-            Take a Test
-          </Button>
+          <Link href="/test">
+            <Button className="bg-blue-600 text-xl w-[200px] mt-4 mx-auto sm:mx-0 animate-fade-in-delay">
+              Take a Test
+            </Button>
+          </Link>
         </div>
         <div className="flex justify-center animate-fade-in-delay">
           <Image

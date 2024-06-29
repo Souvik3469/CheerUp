@@ -39,7 +39,7 @@ function page() {
           Available <span className="font-comf text-theme">Consultors</span>
         </div>
         <hr className="my-5" />
-        <div className="grid grid-cols-2 p-4 gap-4">
+        <div className="grid grid-cols-2 p-4 gap-4 mb-5">
           {meetings?.length > 0 ? (
             meetings?.map((meet: any) => (
               <ConsultantCard
@@ -53,20 +53,33 @@ function page() {
             <h1>no mentors found</h1>
           )}
         </div>
-        <div className="text-center font-serif text-4xl">
+        <hr />
+        <div className="text-center font-serif text-4xl mt-5">
           Booked <span className="font-comf text-theme">Consultors</span>
         </div>
         <div className="w-full grid grid-cols-3">
           {mymeetings?.map((meet) => {
             return (
-              <div className="bg-gray-200 w-82 p-4 m-4 rounded-md shadow-md">
+              <div className="bg-gray-100 w-82 p-4 m-4 rounded-md shadow-md">
                 <div className="mb-2">
                   <div className="font-semibold text-lg">
-                    Name: {meet.guest.name}
+                    Name: {meet?.guest.name}
                   </div>
+                  <div>Query:{meet?.notes}</div>
                 </div>
-                <div className="text-sm text-gray-700">
-                  Status: {meet.status}
+                <div className="text-sm flex gap-3 text-gray-700">
+                  <div>Status: </div>
+                  <div>
+                    {meet.status === "confirmed" ? (
+                      <div className="text-green-600 font-bold">
+                        {meet.status}
+                      </div>
+                    ) : (
+                      <div className="text-red-600 font-bold">
+                        {meet.status}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             );

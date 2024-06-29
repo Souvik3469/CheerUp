@@ -115,45 +115,45 @@ function DashboardPanel() {
           <div className="font-semibold mb-6 mt-5">
             Your Comming Appointments
           </div>
-          <div className="flex gap-4  p-3">
-            <div>
+          <div className="flex gap-4 p-3 border border-gray-200 rounded-xl">
+            <div className="flex-shrink-0">
               <Image
                 className="rounded-xl"
-                alt=""
+                alt="Hospital Image"
                 width={200}
                 height={200}
                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Hospital-de-Bellvitge.jpg/800px-Hospital-de-Bellvitge.jpg"
               />
               <div className="mt-2">
-                <div>Ruby Hospital</div>
-                <div>Kasba, Kolkata</div>
+                <div className="font-bold">Ruby Hospital</div>
+                <div className="text-sm text-gray-500">Kasba, Kolkata</div>
               </div>
             </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex gap-3">
-                <ClipboardPlus />
+            <div className="flex flex-col gap-8">
+              <div className="flex items-center gap-3">
+                <ClipboardPlus className="text-blue-500" />
                 <div className="flex flex-col">
-                  Dr Souvik sen
-                  <span className="text-gray-500">Physicist</span>
+                  <div className="font-medium">Dr. Souvik Sen</div>
+                  <div className="text-gray-500 text-sm">Physician</div>
                 </div>
               </div>
-
-              <div className="flex justify-between  bg-gray-100 p-3 rounded-xl">
-                <div className="flex gap-2 items-center">
+              <div className="flex justify-between items-center bg-gray-100 p-3 rounded-xl">
+                <div className="flex items-center gap-2">
                   <div className="bg-white rounded-full p-1">
                     <Calendar className="text-blue-400" />
                   </div>
-                  26 th jan 2024
+                  <div className="text-sm">26th Jan 2024</div>
                 </div>
-                <div className="flex gap-2 items-center">
+                <div className="flex items-center gap-2">
                   <div className="bg-white rounded-full p-1">
                     <Timer className="text-orange-400" />
                   </div>
-                  <div>09:00 AM</div>
+                  <div className="text-sm">09:00 AM</div>
                 </div>
               </div>
             </div>
           </div>
+
           <hr />
           <div className="flex w-full justify-between mt-5">
             <div className="flex flex-col">

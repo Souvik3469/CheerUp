@@ -49,7 +49,7 @@ const MyEvent: FC<eventCardProps> = ({
         <div className="px-3  gap-2  text-center text-xl font-semibold">
           <span className="font-lg  "> {name}</span>
         </div>
-        <div className=" gap-2  text-gray-500  text-center text-sm font-semibold">
+        <div className=" gap-2  text-gray-500  text-center p-2 text-xs font-semibold">
           <span className="font-sm"> {description}</span>
         </div>
 
