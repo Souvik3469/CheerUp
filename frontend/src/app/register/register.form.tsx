@@ -128,7 +128,7 @@ function RegisterForm() {
                       <SelectValue placeholder="Role" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Ngo">Ngo</SelectItem>
+                      <SelectItem value="NGO">NGO</SelectItem>
                       <SelectItem value="User">User</SelectItem>
                       <SelectItem value="Mentor">Mentor</SelectItem>
                     </SelectContent>
