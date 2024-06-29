@@ -387,6 +387,7 @@ const userController = {
               title: task.title,
               description: task.description,
               day: index + 1,
+              status:"incomplete"
             })),
           },
         },
@@ -503,23 +504,26 @@ const userController = {
         });
       }
 
-      const existingCompletion = await prisma.taskCompletion.findFirst({
-        where: { userTaskSetId: userTaskSet.id, taskId },
+      // const existingCompletion = await prisma.taskCompletion.findFirst({
+      //   where: { userTaskSetId: userTaskSet.id, taskId },
+      // });
+
+      // if (existingCompletion) {
+      //   return res.status(400).json({ error: "Task is already completed" });
+      // }
+
+      // const taskCompletion = await prisma.taskCompletion.create({
+      //   data: {
+      //     userTaskSetId: userTaskSet.id,
+      //     taskId,
+      //     completedAt: new Date(),
+      //   },
+      // });
+ await prisma.task.update({
+        where: { id: taskId },
+        data: { status: "completed" },
       });
-
-      if (existingCompletion) {
-        return res.status(400).json({ error: "Task is already completed" });
-      }
-
-      const taskCompletion = await prisma.taskCompletion.create({
-        data: {
-          userTaskSetId: userTaskSet.id,
-          taskId,
-          completedAt: new Date(),
-        },
-      });
-
-      res.json(taskCompletion);
+      res.json(task);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
