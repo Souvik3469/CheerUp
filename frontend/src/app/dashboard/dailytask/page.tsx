@@ -41,7 +41,7 @@ function page() {
   }, [taskSetLoading]);
   const getStartDate = (startDate, next): any => {
     const newDate = new Date(startDate);
-    newDate.setDate(newDate.getDate() + next);
+    newDate.setDate(newDate.getDate() + next - 1);
 
     // console.log(newDate.m());
     const data = {

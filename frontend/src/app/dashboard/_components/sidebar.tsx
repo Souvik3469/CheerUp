@@ -1,3 +1,5 @@
+"use client";
+import { GetUserQuery } from "@/api/user";
 import { Tooltip } from "@mui/material";
 import {
   Calendar,
