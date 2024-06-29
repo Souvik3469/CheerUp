@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -17,48 +17,74 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { DatePicker } from "@mui/x-date-pickers";
 import { createEvent } from "../../../../api/ngo";
+import toast from "react-hot-toast";
 // import { useRouter } from "next/navigation";
 const formSchema = z.object({
-  event_title: z.string().min(2, {
+  name: z.string().min(2, {
     message: "Title must have minimum of 2 charecters",
   }),
+  description: z.string().min(2, {
+    message: "Description must have minimum of 2 charecters",
+  }),
   location: z.string(),
-  event_date: z.date({ required_error: "Event date is required" }),
+  stdate: z.date({ required_error: "Event starting date is required" }),
+  endate: z.date({ required_error: "Event ending date is required" }),
+  dates: z.array(z.date({ required_error: "Event date is required" })),
   funding: z.number(),
-  // .min(1, {
-  //   message: "Funding must be atleast of Rs 1",
-  // }),
 });
 
 function Ngoform() {
   // const router = useRouter();
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [dts, setDts] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      event_title: "",
+      name: "",
+      description: "",
       location: "",
-      event_date: new Date(),
+      stdate: new Date(),
+      endate: new Date(),
+      dates: [],
       funding: 0,
     },
   });
 
-  const handleDateChange = (newDate) => {
-    if (newDate) {
-      form.setValue("event_date", newDate.toDate());
+  // const handleDateChange = (newDate) => {
+  //   if (newDate) {
+  //     form.setValue("dates", newDate.toDate());
+  //   }
+  // };
+
+  const onSubmit = async (formData: z.infer<typeof formSchema>) => {
+    try {
+      console.log(startDate, endDate);
+
+      setButtonDisabled(false);
+      form.setValue("dates", [startDate, endDate]);
+
+      console.log(form.getValues("dates"));
+      const data = await createEvent(formData);
+      // const { data } = response;
+      console.log("datas", data);
+      toast.success("Event is created successfylly");
+    } catch (error) {
+      toast.error("error in creating ngo event");
     }
   };
 
-  const onSubmit = async (formData: z.infer<typeof formSchema>) => {
-    console.log(formData);
-    setButtonDisabled(false);
-    try {
-      const response = await createEvent(formData);
-      const { data } = response;
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleStDateChange = (newDate) => {
+    const dateValue = newDate.$d;
+    setStartDate(dateValue);
+    form.setValue("stdate", dateValue);
+  };
+
+  const handleEnDateChange = (newDate) => {
+    const dateValue = newDate.$d;
+    setEndDate(dateValue);
+    form.setValue("endate", dateValue);
   };
 
   return (
@@ -73,12 +99,26 @@ function Ngoform() {
         >
           <FormField
             control={form.control}
-            name="event_title"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Event Title</FormLabel>
                 <FormControl>
                   <Input placeholder="Event-title" {...field} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Event Description</FormLabel>
+                <FormControl>
+                  <Input placeholder="Event-description" {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -130,16 +170,39 @@ function Ngoform() {
           />
           <FormField
             control={form.control}
-            name="event_date"
+            name="stdate"
             render={({ field }) => (
               <FormItem className="col-span-2">
                 <FormLabel className="flex justify-between">
-                  Date of event
+                  Start Date of event
                 </FormLabel>
                 <FormControl>
                   <DatePicker
-                    label="Select a date"
-                    onChange={(newDate) => handleDateChange(newDate)}
+                    // label="Select a starting date"
+                    // onChange={(newDate) => handleStDateChange(newDate)}
+                    label="Select a starting date"
+                    onChange={handleStDateChange}
+                    // value={startDate}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="endate"
+            render={({ field }) => (
+              <FormItem className="col-span-2">
+                <FormLabel className="flex justify-between">
+                  Start Date of event
+                </FormLabel>
+                <FormControl>
+                  <DatePicker
+                    // label="Select a starting date"
+                    // onChange={(newDate) => handleEnDateChange(newDate)}
+                    label="Select an ending date"
+                    onChange={handleEnDateChange}
+                    // value={endDate}
                   />
                 </FormControl>
               </FormItem>
