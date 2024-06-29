@@ -17,10 +17,41 @@ function page() {
   };
   const { data: myTaskSet, isLoading: taskSetLoading } = getMyDailyTaskQuery();
   console.log(myTaskSet?.taskSet, "mytasks");
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const getMonthName = (monthIndex) => {
+    return monthNames[monthIndex];
+  };
   useEffect(() => {
     setTaskSet(myTaskSet?.taskSet);
     console.log(taskSet, "mytask");
   }, [taskSetLoading]);
+  const getStartDate = (startDate, next): any => {
+    const newDate = new Date(startDate);
+    newDate.setDate(newDate.getDate() + next);
+
+    // console.log(newDate.m());
+    const data = {
+      day: newDate.getDate(),
+      month: newDate.getMonth(),
+      time: newDate.getTime(),
+    };
+    return data;
+  };
+
   return (
     <div className="">
       {taskSetLoading ? (
@@ -34,11 +65,26 @@ function page() {
           </div>
           <div>
             {taskSet?.tasks?.map((task) => {
+              const j = getStartDate(myTaskSet?.startDate, task.day).month;
               return (
                 <div className="bg-white rounded-xl p-4 m-5 ">
                   <div className="text-3xl font-semibold">{task.title}</div>
                   <div>{task?.description}</div>
                   <div>{task?.status} </div>
+                  {task?.status === "completed" ? (
+                    ""
+                  ) : (
+                    <>
+                      <div className="flex gap-1">
+                        <div className="font-semibold">Opening on : </div>
+                        <div>
+                          {getStartDate(myTaskSet?.startDate, task.day).day}
+                        </div>
+                        <div>{getMonthName(j)}</div>
+                      </div>
+                    </>
+                  )}
+
                   {task?.status !== "completed" ? (
                     <Button
                       onClick={() => {

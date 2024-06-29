@@ -7,6 +7,7 @@ import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { Mymeetings } from "@/api/meeting";
 import { startMyTask } from "@/api/tasks";
+import { Button } from "@/components/ui/button";
 function DashboardPanel() {
   const { isLoading, data: userData } = GetUserQuery();
 
@@ -106,14 +107,14 @@ function DashboardPanel() {
           <div className="border border-gray-300 rounded-xl">
             <WeekPicker />
           </div>
-          <div
+          <Button
             onClick={() => {
               startTracking();
             }}
-            className="bg-blue-600 flex cursor-pointer  rounded-3xl mt-5 text-white p-2"
+            className="mt-4"
           >
             Start Your Progress Tracking
-          </div>
+          </Button>
         </div>
       </div>
     </div>

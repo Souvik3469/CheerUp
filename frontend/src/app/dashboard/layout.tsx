@@ -8,7 +8,7 @@ interface PageProps {
 const Layout: FC<PageProps> = ({ children }) => {
   return (
     <div className="flex h-screen">
-      <div className="flex-none">
+      <div className="flex-none hidden lg:block">
         <Sidebar />
       </div>
       <div className="flex-grow overflow-auto">{children}</div>
