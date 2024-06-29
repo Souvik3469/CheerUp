@@ -39,7 +39,7 @@ const userController = {
               owner: true,
             },
           },
-          User: true,
+          user: true,
         },
       });
 
@@ -196,7 +196,7 @@ const userController = {
 
       const existingQuestion = await prisma.question.findUnique({
         where: {
-          id: parseInt(questionId),
+          id: questionId,
         },
       });
 
@@ -207,7 +207,7 @@ const userController = {
       const answer = await prisma.answer.create({
         data: {
           text: text,
-          questionId: parseInt(questionId),
+          questionId: questionId,
           userId: userId,
         },
       });
