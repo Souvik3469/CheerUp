@@ -7,6 +7,9 @@ import toast from "react-hot-toast";
 
 function Page() {
   const [taskSet, setTaskSet] = useState();
+
+  const { data: myTaskSet, isLoading: taskSetLoading } = getMyDailyTaskQuery();
+  console.log(myTaskSet?.taskSet, "mytasks");
   const complete = async (id) => {
     try {
       const data = await completeTask(id);
@@ -15,8 +18,6 @@ function Page() {
       toast(err?.response.data.error);
     }
   };
-  const { data: myTaskSet, isLoading: taskSetLoading } = getMyDailyTaskQuery();
-  console.log(myTaskSet?.taskSet, "mytasks");
   const monthNames = [
     "January",
     "February",
@@ -81,7 +82,7 @@ function Page() {
             {taskSet?.tasks?.map((task) => {
               const j = getStartDate(myTaskSet?.startDate, task.day).month;
               return (
-                <div className="bg-white rounded-xl flex justify-between p-4 m-5 ">
+                <div className="bg-gray-100 rounded-xl flex justify-between p-4 m-5 ">
                   <div>
                     <div className="flex gap-4 flex-col">
                       <div className="text-3xl font-semibold">{task.title}</div>
@@ -94,9 +95,9 @@ function Page() {
                             {task.status}{" "}
                           </div>
                         ) : (
-                          <div className="text-green-600 font-semibold">
+                          <Button className="bg-green-600 font-semibold">
                             {task.status}{" "}
-                          </div>
+                          </Button>
                         )}{" "}
                       </div>
                     </div>
@@ -110,7 +111,7 @@ function Page() {
                           Complete Task
                         </Button>
                       ) : (
-                        task?.status
+                        ""
                       )}
                     </div>
                   </div>
