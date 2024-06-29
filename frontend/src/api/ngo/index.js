@@ -56,7 +56,7 @@ export const registerEvent = async (id) => {
 
 export const getMyEvents = async () => {
   const { data } = await api.get("/user/get-myevents");
-  console.log(data);
+  console.log(data, "dataaa");
   return data;
 };
 

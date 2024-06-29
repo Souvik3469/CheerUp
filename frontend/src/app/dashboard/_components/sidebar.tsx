@@ -19,7 +19,7 @@ import Event from "../NGO/allEvents/components/Event";
 
 function Sidebar() {
   const [events, setEvents] = useState([]);
-  const [alreadyReg, setAlredyReg] = useState([]);
+
   const [myevents, setMyEvents] = useState([]);
   const {
     isLoading: EventLoading,
@@ -51,9 +51,9 @@ function Sidebar() {
   if (EventLoading || MyEventLoading) {
     return <Loading />;
   }
-  const checkExistence = (id) => {
-    return myevents.some((ev) => ev.id === id);
-  };
+  // const checkExistence = (id) => {
+  //   return myevents.some((ev) => ev.id === id);
+  // };
   // const getUserDetails = GetUserQuery();
   return (
     <div className="flex">
@@ -110,7 +110,7 @@ function Sidebar() {
                   startDate={
                     ev.date && ev.date[0] && ev.date[0].date.substr(0, 10)!
                   }
-                  d_option={checkExistence(ev.id)}
+                  // d_option={checkExistence(ev.id)}
                 />
               ))
             ) : (

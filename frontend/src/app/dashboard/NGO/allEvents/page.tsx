@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Event from "./components/Event";
 import { fetchMyEvents, fetchevents } from "@/api/ngo";
 import Loading from "../../_components/Loader";
+import { GetUserQuery } from "@/api/user";
 
 function page() {
   const [events, setEvents] = useState([]);
@@ -11,15 +12,16 @@ function page() {
     isLoading: EventLoading,
     data: eventdata,
     isError: EventError,
-  } = fetchMyEvents();
+  } = GetUserQuery();
   useEffect(() => {
     if (!EventLoading) {
-      setEvents(eventdata.message);
+      console.log("first", eventdata);
+      setEvents(eventdata.registeredEvents);
     }
   }, [EventLoading]);
-  const checkExistance = (id) => {
-    return events.some((ev) => ev.id === id);
-  };
+  // const checkExistance = (id) => {
+  //   return events.some((ev) => ev.id === id);
+  // };
   if (EventError) {
     return (
       <div>
@@ -49,11 +51,11 @@ function page() {
                 startDate={
                   ev.date && ev.date[0] && ev.date[0].date.substr(0, 10)!
                 }
-                d_option={checkExistance(ev.id)}
+                // d_option={checkExistance(ev.id)}
               />
             ))
           ) : (
-            <div>""</div>
+            <div>"No Joined Events"</div>
           )}
         </div>
       </div>

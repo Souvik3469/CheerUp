@@ -13,7 +13,7 @@ interface eventCardProps {
   startDate: String;
   // d_option: Boolean;
 }
-const Event: FC<eventCardProps> = ({
+const MyEvent: FC<eventCardProps> = ({
   id,
   name,
   description,
@@ -61,53 +61,9 @@ const Event: FC<eventCardProps> = ({
             Event Date : <span className="font-sm"> {startDate}</span>
           </p>
         </div>
-
-        <div className="px-5 py-4 flex">
-          <div>
-            {/* <Link href={`/dashboard/${id}`}> */}
-            <Button
-              variant="contained"
-              className="bg-blue-500 hover:bg-blue-700 text-white h-12 font-semibold py-2 px-4 rounded-full"
-              onClick={handleJoinEvent}
-              // disabled={d_option}
-            >
-              Join Event
-            </Button>
-            {/* </Link> */}
-          </div>
-          <div>
-            <AvatarGroup max={4}>
-              <Avatar
-                sx={{ width: "1.4vmax", height: "1.4vmax", fontSize: "1vmax" }}
-                alt="Remy Sharp"
-                src="/static/images/avatar/1.jpg"
-              />
-              <Avatar
-                sx={{ width: "1.4vmax", height: "1.4vmax", fontSize: "1vmax" }}
-                alt="Travis Howard"
-                src="/static/images/avatar/2.jpg"
-              />
-              <Avatar
-                sx={{ width: "1.4vmax", height: "1.4vmax", fontSize: "1vmax" }}
-                alt="Cindy Baker"
-                src="/static/images/avatar/3.jpg"
-              />
-              <Avatar
-                sx={{ width: "1vmax", height: "1vmax" }}
-                alt="Agnes Walker"
-                src="/static/images/avatar/4.jpg"
-              />
-              <Avatar
-                sx={{ width: "1.4vmax", height: "1.4vmax", fontSize: "1vmax" }}
-                alt="Trevor Henderson"
-                src="/static/images/avatar/5.jpg"
-              />
-            </AvatarGroup>
-          </div>
-        </div>
       </div>
     </div>
   );
 };
 
-export default Event;
+export default MyEvent;
