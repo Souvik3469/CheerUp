@@ -64,7 +64,7 @@ function DashboardPanel() {
       </div>
     );
   }
-  const percentage = 66;
+
   const startTracking = async () => {
     const { data } = await startMyTask();
     console.log(data, "data from startmeeting");
@@ -159,7 +159,7 @@ function DashboardPanel() {
                 <div className=" font-comf font-semibold text-3xl">
                   Mental Health Progress
                 </div>
-                <div className="flex flex-row justify-center gap-8 p-6">
+                <div className="flex flex-row justify-center gap-8 mt-3">
                   <div className="border border-gray-300 rounded-3xl p-2 w-[320px] h-[250px] rounded-xl flex items-center justify-center">
                     <Bar data={barData} options={options} />
                   </div>
@@ -242,9 +242,9 @@ function DashboardPanel() {
                 Daily Progress
               </div>
               <CircularProgressbar
-                value={percentage}
+                value={completedTasks?.length}
                 className="w-8"
-                text={`${percentage}%`}
+                text={`${Math.ceil((completedTasks?.length / 30) * 100)}%`}
                 styles={buildStyles({
                   rotation: 0.25,
                   strokeLinecap: "butt",

@@ -4,7 +4,7 @@ import Ngoform from "./ngo.form";
 
 function page() {
   return (
-    <div className="grid grid-cols-2 p-10 h-screen">
+    <div className="grid grid-cols-2  mt-4 mb-10 h-screen">
       {/* <LoginForm /> */}
       <Ngoform />
       <div className="my-auto ">

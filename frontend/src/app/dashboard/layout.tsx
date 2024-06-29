@@ -11,7 +11,7 @@ const Layout: FC<PageProps> = ({ children }) => {
       <div className="flex-none hidden lg:block">
         <Sidebar />
       </div>
-      <div className="flex-grow overflow-auto">{children}</div>
+      <div className="flex-grow overflow-auto p-1">{children}</div>
     </div>
   );
 };

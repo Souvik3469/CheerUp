@@ -33,7 +33,7 @@ const eventController = {
           description,
           location,
           funding,
-        
+
           ngoId: ngoid,
           date: {
             create: dates.map((date) => ({
@@ -127,7 +127,9 @@ const eventController = {
       });
 
       if (!event) {
-        return res.status(404).json({ error: "Event not found or you are not authorized to delete it" });
+        return res.status(404).json({
+          error: "Event not found or you are not authorized to delete it",
+        });
       }
 
       await prisma.event.delete({
@@ -157,7 +159,9 @@ const eventController = {
       });
 
       if (!event) {
-        return res.status(404).json({ error: "Event not found or you are not authorized to update it" });
+        return res.status(404).json({
+          error: "Event not found or you are not authorized to update it",
+        });
       }
 
       const updatedEvent = await prisma.event.update({
@@ -184,9 +188,10 @@ const eventController = {
       res.status(500).json({ error: "Internal server error" });
     }
   },
-    async registerForEvent(req, res, next) {
+
+  async registerForEvent(req, res, next) {
     try {
-      const eventId  = req.params.id;
+      const eventId = req.params.id;
       const userId = req.user.id;
 
       // console.log('====================================');
@@ -204,7 +209,9 @@ const eventController = {
 
       // Check if the user is the NGO who created the event
       if (event.ngoId === userId) {
-        return res.status(403).json({ error: "NGOs cannot register for their own events" });
+        return res
+          .status(403)
+          .json({ error: "NGOs cannot register for their own events" });
       }
 
       // Check if the user is already registered for the event
@@ -218,7 +225,9 @@ const eventController = {
       });
 
       if (existingRegistration) {
-        return res.status(400).json({ error: "User is already registered for this event" });
+        return res
+          .status(400)
+          .json({ error: "User is already registered for this event" });
       }
 
       // Register the user for the event
@@ -229,7 +238,11 @@ const eventController = {
         },
       });
 
-      res.json({ success: true, message: "User registered for the event", userEvent });
+      res.json({
+        success: true,
+        message: "User registered for the event",
+        userEvent,
+      });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Internal server error" });

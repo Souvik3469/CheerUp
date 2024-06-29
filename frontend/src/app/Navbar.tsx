@@ -14,7 +14,6 @@ function Navbar() {
         </Link>
         <div className="text-xl font-medium">
           <div className="flex gap-5">
-            <div>Home</div>
             {user?.data?.role === "user" ? (
               <Link href="/dashboard">Dashboard</Link>
             ) : (
@@ -25,8 +24,8 @@ function Navbar() {
             ) : (
               <></>
             )}
-            <div>Discussion Forum</div>
-            <div>Consultation</div>
+            <Link href="/dashboard/faq">Discussion Forum</Link>
+            <Link href="/dashboard/meeting">Consultation</Link>
             <Link href="/test">Test</Link>
             <div>Articles</div>
           </div>

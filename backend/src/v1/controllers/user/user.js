@@ -17,6 +17,17 @@ const userController = {
         where: {
           id: req.user.id,
         },
+        include: {
+          registeredEvents: {
+            include: {
+              event: {
+                include: {
+                  date: true,
+                },
+              },
+            },
+          },
+        },
       });
       res.json(customResponse(200, user));
     } catch (err) {
