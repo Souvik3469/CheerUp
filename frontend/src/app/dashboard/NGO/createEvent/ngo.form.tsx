@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { DatePicker } from "@mui/x-date-pickers";
-// import { loginUser } from "@/api";
+import { createEvent } from "../../../../api/ngo";
 // import { useRouter } from "next/navigation";
 const formSchema = z.object({
   event_title: z.string().min(2, {
@@ -24,19 +24,22 @@ const formSchema = z.object({
   }),
   location: z.string(),
   event_date: z.date({ required_error: "Event date is required" }),
-  // .min(2, {
-  //   message: "password must be long",
+  funding: z.number(),
+  // .min(1, {
+  //   message: "Funding must be atleast of Rs 1",
   // }),
 });
 
 function Ngoform() {
   // const router = useRouter();
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       event_title: "",
       location: "",
       event_date: new Date(),
+      funding: 0,
     },
   });
 
@@ -47,9 +50,15 @@ function Ngoform() {
   };
 
   const onSubmit = async (formData: z.infer<typeof formSchema>) => {
+    console.log(formData);
+    setButtonDisabled(false);
     try {
-      console.log(formData);
-    } catch (err) {}
+      const response = await createEvent(formData);
+      const { data } = response;
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -96,6 +105,31 @@ function Ngoform() {
           />
           <FormField
             control={form.control}
+            name="funding"
+            render={({ field }) => (
+              <FormItem className="col-span-2">
+                <FormLabel className="flex justify-between">
+                  Fund Raised
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Funding"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage>
+                  <FormDescription>
+                    Please provide a valid location.
+                    <br />
+                  </FormDescription>
+                </FormMessage>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="event_date"
             render={({ field }) => (
               <FormItem className="col-span-2">
@@ -112,10 +146,7 @@ function Ngoform() {
             )}
           />
 
-          <Button
-            type="submit"
-            // disabled={buttonDisabled}
-          >
+          <Button type="submit" disabled={buttonDisabled}>
             Create Event
           </Button>
         </form>
