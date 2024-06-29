@@ -90,7 +90,18 @@ const eventController = {
         },
         include: {
           date: true,
+           registeredUsers: {
+            select: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
         },
+        
       });
 
       res.json({ success: true, message: events });
