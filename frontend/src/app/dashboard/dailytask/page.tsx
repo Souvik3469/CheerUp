@@ -5,7 +5,7 @@ import Loading from "../_components/Loader";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 
-function page() {
+function Page() {
   const [taskSet, setTaskSet] = useState();
   const complete = async (id) => {
     try {
@@ -52,12 +52,26 @@ function page() {
     return data;
   };
 
+  const renderDescriptionBulletPoints = (description) => {
+    if (!description) return null;
+
+    const items = description.split(",").map((item) => item.trim());
+
+    return (
+      <ul className="list-disc ml-4">
+        {items.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <div className="">
       {taskSetLoading ? (
         <Loading />
       ) : (
-        <div className="bg-slate-200 p-10 flex flex-col gap-5 ">
+        <div className=" p-10 flex flex-col gap-5 ">
           <div></div>
           <div className="text-center font-comf font-semibold text-4xl">
             {taskSet?.name}{" "}
@@ -71,7 +85,9 @@ function page() {
                   <div>
                     <div className="flex gap-4 flex-col">
                       <div className="text-3xl font-semibold">{task.title}</div>
-                      <div>{task?.description}</div>
+                      <div>
+                        {renderDescriptionBulletPoints(task?.description)}
+                      </div>
                       <div>
                         {task?.status === "incomplete" ? (
                           <div className="text-red-600 font-semibold">
@@ -91,10 +107,10 @@ function page() {
                             complete(task.id);
                           }}
                         >
-                          complete Task
+                          Complete Task
                         </Button>
                       ) : (
-                        ""
+                        task?.status
                       )}
                     </div>
                   </div>
@@ -123,4 +139,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

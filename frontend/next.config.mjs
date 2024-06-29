@@ -22,6 +22,7 @@ const nextConfig = {
         protocol: "https",
         hostname: "static.vecteezy.com",
       },
+
       // www.ngoregistration.org,
       // "www.ngoregistration.org",
     ],

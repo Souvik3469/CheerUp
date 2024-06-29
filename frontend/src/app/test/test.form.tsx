@@ -55,7 +55,7 @@ function TestForm() {
   console.log(calculateTotalPoints(), "selected");
 
   return (
-    <div className="p-10">
+    <div className="p-10 mt-20">
       {question.data &&
         question.data[1]?.questions.map((data: any, ind: any) =>
           ind === currentInd ? (

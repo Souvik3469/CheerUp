@@ -34,13 +34,12 @@ const Event: FC<eventCardProps> = ({
   };
 
   return (
-    <div className="bg-white  flex flex-col  shadow-lg rounded-lg transition ease-in hover:-translate-y-1">
-      <div className="bg-gery-300 h-full flex "></div>
-      <div className=" flex justify-center flex-col  ">
+    <div className="bg-white  flex flex-col  w-[300px] p-4 shadow-lg rounded-lg transition ease-in hover:-translate-y-1">
+      <div className=" flex justify-center  flex-col  ">
         <div className="px-3 py-1 gap-2  text-center text-xl font-semibold">
           <span className="font-lg  "> {name}</span>
         </div>
-        <div className=" gap-2  text-gray-500  text-center text-sm font-semibold">
+        <div className=" gap-2  text-gray-500  text-center text-xs font-semibold">
           <span className="font-sm"> {description}</span>
         </div>
 

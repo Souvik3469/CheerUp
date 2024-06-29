@@ -12,6 +12,7 @@ import "react-circular-progressbar/dist/styles.css";
 import { Mymeetings } from "@/api/meeting";
 import { getMyDailyTaskQuery, startMyTask } from "@/api/tasks";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 function DashboardPanel() {
   const { isLoading, data: userData } = GetUserQuery();
   const { data: myTaskSet, isLoading: taskSetLoading } = getMyDailyTaskQuery();
@@ -66,6 +67,7 @@ function DashboardPanel() {
   }
 
   const startTracking = async () => {
+    toast.success("task started successfully");
     const { data } = await startMyTask();
     console.log(data, "data from startmeeting");
   };
@@ -237,26 +239,30 @@ function DashboardPanel() {
                 </Button>
               )}
             </div>
-            <div className="w-[200px] h-[250px] bg-gray-200 border border-gray-300 rounded-xl p-6">
-              <div className="text-center font-semibold mb-5">
-                Daily Progress
+            {completedTasks ? (
+              <div className="w-[200px] h-[250px] bg-gray-200 border border-gray-300 rounded-xl p-6">
+                <div className="text-center font-semibold mb-5">
+                  Daily Progress
+                </div>
+                <CircularProgressbar
+                  value={completedTasks?.length}
+                  className="w-8"
+                  text={`${Math.ceil((completedTasks?.length / 30) * 100)}%`}
+                  styles={buildStyles({
+                    rotation: 0.25,
+                    strokeLinecap: "butt",
+                    textSize: "16px",
+                    pathTransitionDuration: 0.5,
+                    pathColor: `#3C17B5`,
+                    textColor: "black",
+                    trailColor: "white",
+                    backgroundColor: "#597445",
+                  })}
+                />
               </div>
-              <CircularProgressbar
-                value={completedTasks?.length}
-                className="w-8"
-                text={`${Math.ceil((completedTasks?.length / 30) * 100)}%`}
-                styles={buildStyles({
-                  rotation: 0.25,
-                  strokeLinecap: "butt",
-                  textSize: "16px",
-                  pathTransitionDuration: 0.5,
-                  pathColor: `#3C17B5`,
-                  textColor: "black",
-                  trailColor: "white",
-                  backgroundColor: "#597445",
-                })}
-              />
-            </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

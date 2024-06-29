@@ -96,7 +96,7 @@ function Sidebar() {
             </Link>
           )}
         </Tooltip>
-        {getUserDetails?.data?.role === "user" ? (
+        {getUserDetails?.data?.role === "User" ? (
           <>
             <Tooltip title="My Tasks">
               <Link href="/dashboard/dailytask" className="text-white">
@@ -121,14 +121,15 @@ function Sidebar() {
           <Settings className="text-white" />
         </Tooltip>
       </div>
-      <div className=" min-w-[400px] h-screen overflow-hidden bg-slate-200">
+      <div className=" min-w-[400px] h-screen overflow-hidden mx-auto flex flex-col  items-center bg-slate-200">
         <div className="primary-container mt-4 ">
           <div className="text-center font-serif text-4xl">All Ngo Events</div>
 
-          <div className="grid grid-cols-1 p-4 gap-10">
+          <div className="grid grid-cols-1 p-4 items-center justify-center gap-10">
             {events?.length > 0 ? (
-              events?.map((ev: any) => (
+              events.slice(-2).map((ev: any) => (
                 <Event
+                  key={ev.id}
                   id={ev.id}
                   name={ev.name!}
                   description={ev?.description!}
@@ -141,7 +142,7 @@ function Sidebar() {
                 />
               ))
             ) : (
-              <div>""</div>
+              <div>No events to display</div>
             )}
           </div>
         </div>
