@@ -8,27 +8,27 @@ datasource db {
 }
 
 model User {
-    id              String        @id @default(auto()) @map("_id") @db.ObjectId
-    name            String?
-    email           String?       @unique
-    role            String?       @default("User") // User,Mentor,NGO
-    bio             String?
-    image           String?
-    coverImage      String?
-    profileImage    String?
-    password        String?
-    document        String?
-    questions       Question[]
-    answers         Answer[]
-    tests           Test[]
-    taskSets        UserTaskSet[]
-    eventAsNGO      Event[]       @relation("ngo")
-    eventAsUser     Event[]       @relation("user")
-    meetingsAsHost  Meeting[]     @relation("host")
-    meetingsAsGuest Meeting[]     @relation("guest")
-    createdAt       DateTime      @default(now())
-    updatedAt       DateTime      @updatedAt
-    hasNotification Boolean?
+    id               String        @id @default(auto()) @map("_id") @db.ObjectId
+    name             String?
+    email            String?       @unique
+    role             String?       @default("User") // User, Mentor, NGO
+    bio              String?
+    image            String?
+    coverImage       String?
+    profileImage     String?
+    password         String?
+    document         String?
+    questions        Question[]
+    answers          Answer[]
+    tests            Test[]
+    taskSets         UserTaskSet[]
+    eventAsNGO       Event[]       @relation("ngo")
+    registeredEvents UserEvent[]
+    meetingsAsHost   Meeting[]     @relation("host")
+    meetingsAsGuest  Meeting[]     @relation("guest")
+    createdAt        DateTime      @default(now())
+    updatedAt        DateTime      @updatedAt
+    hasNotification  Boolean?
 }
 
 model Question {
@@ -160,11 +160,12 @@ model Event {
     location    String?
     funding     Int?
 
-    ngo    User        @relation("ngo", fields: [ngoId], references: [id], onDelete: Cascade)
-    user   User?       @relation("user", fields: [userId], references: [id], onDelete: Cascade)
-    userId String?
-    ngoId  String
-    date   EventDate[]
+    ngo             User        @relation("ngo", fields: [ngoId], references: [id], onDelete: Cascade)
+    registeredUsers UserEvent[]
+    ngoId           String
+    date            EventDate[]
+
+    @@index([ngoId])
 }
 
 model EventDate {
@@ -172,4 +173,16 @@ model EventDate {
     date    DateTime
     event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
     eventId String
+}
+
+model UserEvent {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+    event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+    eventId   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([userId, eventId])
 }
