@@ -1,9 +1,8 @@
-# GreenIQ - An Mental wellness platform to take care of people with anxiety and depression  - [Project Summary ](https://www.youtube.com/watch?v=9pKMHoUljrI)
+# CheerUp - An Mental wellness platform to take care of people with anxiety and depression  - [Project Summary ](https://www.youtube.com/watch?v=9pKMHoUljrI)
 
 #### REQUIREMENTS:
 
 - Make sure **node.js** is installed.
-- Install **Postgres** as we will be using it locally.
 - The database has been migrated to **MongoDB Atlas** from PosgreSql due to free tier on render db expires on every 3 months for postgreSql.
 
 ### Home
