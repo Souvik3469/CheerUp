@@ -1,4 +1,4 @@
-# CheerUp - An E-learning Platform for Rural Areas - [Project Summary ](https://www.youtube.com/watch?v=L6WUEdqNYWs)
+# CheerUp - [Project Summary ](https://www.youtube.com/watch?v=L6WUEdqNYWs)
 
 
 I have dockerized this application so just run  " docker-compose up --build   " to run the entire application ( both Frontend & Backend ) 
